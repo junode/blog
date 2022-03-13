@@ -302,19 +302,20 @@
           
             <p>通过<code>hexo new post mock</code>创建一个mock.md文件和mock文件夹。在mock文件夹中放入一张图片，然后再mock.md中引用，看是否生效。</p>
 <p><strong>引入方式1：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% asset_img test.png 图片引用方法一 %&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% asset_img test.png 唯一生效的方式 %&#125;</span><br></pre></td></tr></table></figure>
 
-<p>没有生效….</p>
+ <img src="/2022/03/13/mock/good_month.png" class title="图片引用方法一">
+
 <p><strong>引入方式</strong>2：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法二](/mock/good_month.png)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法二：该方法没有生效](/mock/good_month.png)</span><br></pre></td></tr></table></figure>
 
 <p> <img src="/mock.assets/good_month.png" alt="图片引用方法二"></p>
 <p><strong>引入方式3</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法三](/mock/good_month.png)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法三：该方法没有生效](/mock/good_month.png)</span><br></pre></td></tr></table></figure>
 
 <p> <img src="/mock/good_month.png" alt="图片引用方法三"></p>
 <p><strong>引入方式4</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法四](/images/good_month.png)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法四：该方法没有生效](/images/good_month.png)</span><br></pre></td></tr></table></figure>
 
 <p> <img src="/mock/good_month.png" alt="图片引用方法三"></p>
 
