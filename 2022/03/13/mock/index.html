@@ -22,8 +22,9 @@
 <meta property="og:image" content="http://example.com/mock.assets/good_month.png">
 <meta property="og:image" content="http://example.com/mock/good_month.png">
 <meta property="og:image" content="http://example.com/mock/good_month.png">
+<meta property="og:image" content="http://example.com/mock.assets/image-20220314120605314.png">
 <meta property="article:published_time" content="2022-03-13T14:21:47.000Z">
-<meta property="article:modified_time" content="2022-03-14T04:02:26.641Z">
+<meta property="article:modified_time" content="2022-03-14T04:07:04.937Z">
 <meta property="article:author" content="Junode">
 <meta property="article:tag" content="用于测试图片是否成功的">
 <meta property="article:tag" content="随笔">
@@ -201,7 +202,7 @@
       <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
       <i class="icon-statistics"></i>
       <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">396字</span>
+      <span class="post-count">502字</span>
     </span>
   </span>
 
@@ -210,7 +211,7 @@
     <span class="post-meta-item-icon">
       <i class="icon-book icon"></i>
       <span class="post-meta-item-text"> 阅读时长≈</span>
-      <span class="post-count">1分</span>
+      <span class="post-count">2分</span>
     </span>
   </span>
 </div>
@@ -254,6 +255,10 @@
 
 <p> <img src="/mock/good_month.png" alt="图片引用方法三"></p>
 <hr>
+<h2 id="报错解决"><a href="#报错解决" class="headerlink" title="报错解决"></a>报错解决</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g -d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Start processing</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Template render error: (unknown path)</span><br><span class="line">    Error: template names must be a string: undefined</span><br><span class="line">     ....</span><br><span class="line">&#125; Something&#x27;s wrong. Maybe you can find the solution here: %s https://hexo.io/docs/troubleshooting.html</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>渲染错误。思考了下之前没有报错和报错前差异，是我将放在<code>代码块</code>的文章引用，直接拿出来就报错的。从而将其放在代码块中就不会报错了。如图：</p>
+<p><img src="/mock.assets/image-20220314120605314.png" alt="image-20220314120605314"></p>
 <p><strong>文章参考</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. Hexo-修改Hexo主题：https://www.jianshu.com/p/33bc0a0a6e90</span><br><span class="line">2. yilia设置分类和标签、设置随笔、设置归档：https://blog.csdn.net/qq_40609008/article/details/120198623</span><br><span class="line">3. GitHub Pages + Hexo搭建个人博客网站，史上最全教程：https://blog.csdn.net/yaorongke/article/details/119089190</span><br><span class="line">4. hexo使用theme出现“ &#123;% extends ‘_layout.swig‘ %&#125; &#123;% import ‘_macro/post.swig‘ as post_template %&#125;“问题：https://blog.csdn.net/qq_39898645/article/details/109181736</span><br><span class="line">5. hexo网站官方文档：https://hexo.io/zh-cn/docs/setup</span><br></pre></td></tr></table></figure>
 
@@ -397,7 +402,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#title%E4%B8%8B%E5%A6%82%E4%BD%95%E8%B7%B3%E8%BD%AC%E5%88%B0%E9%A1%B5%E9%9D%A2"><span class="toc-number">1.</span> <span class="toc-text">title下如何跳转到页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%BC%95%E5%85%A5%E5%9B%BE%E7%89%87"><span class="toc-number">2.</span> <span class="toc-text">如何引入图片</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#title%E4%B8%8B%E5%A6%82%E4%BD%95%E8%B7%B3%E8%BD%AC%E5%88%B0%E9%A1%B5%E9%9D%A2"><span class="toc-number">1.</span> <span class="toc-text">title下如何跳转到页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%BC%95%E5%85%A5%E5%9B%BE%E7%89%87"><span class="toc-number">2.</span> <span class="toc-text">如何引入图片</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3"><span class="toc-number">3.</span> <span class="toc-text">报错解决</span></a></li></ol>
                     </div>
                 </span>
             </div>
