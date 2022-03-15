@@ -18,12 +18,11 @@
 <meta property="og:description" content="本章主要是hexo的使用练习，若是新人接触hexo，应该有点用吧。。。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/mock.assets/image-20220314105427125.png">
-<meta property="og:image" content="http://example.com/mock.assets/good_month.png">
-<meta property="og:image" content="http://example.com/mock/good_month.png">
-<meta property="og:image" content="http://example.com/mock/good_month.png">
+<meta property="og:image" content="http://example.com/images/good_month.png">
+<meta property="og:image" content="http://example.com/images/good_month.png">
 <meta property="og:image" content="http://example.com/mock.assets/image-20220314120605314.png">
 <meta property="article:published_time" content="2022-03-13T14:21:47.000Z">
-<meta property="article:modified_time" content="2022-03-15T14:39:56.700Z">
+<meta property="article:modified_time" content="2022-03-15T14:51:05.474Z">
 <meta property="article:author" content="Junode">
 <meta property="article:tag" content="用于测试图片是否成功的">
 <meta property="article:tag" content="随笔">
@@ -201,7 +200,7 @@
       <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
       <i class="icon-statistics"></i>
       <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">874字</span>
+      <span class="post-count">826字</span>
     </span>
   </span>
 
@@ -243,8 +242,6 @@
 <li>在看到效果后，可能需要设置自己的私有属性，可以通过修改两个配置文件来完成，一个是全局配置文件：<code>./junode.github.io/note/_config.yml</code>，一个是当前主题的配置文件：<code>./junode.github.io/note/themes/yiliya/_config.yml</code>。其中关于配置文件的说明，可以参考：<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/configuration">https://hexo.io/zh-cn/docs/configuration</a></li>
 <li>然后我们开始创建自己文件了。一般我就只用：hexo new fileName，生成的md文件是在<code>source/_post</code>目录下。关于创建文件的说明可以参考：<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/writing%E3%80%82">https://hexo.io/zh-cn/docs/writing。</a></li>
 <li>当我们创建文件好后，要编辑文件，若想引入图片，可能会有些小问题（主要是我自己的问题…）。图片的引入不成功，我这边引用成功的示例：<code> &#123;% asset_img test.png 唯一生效的方式 %&#125;</code>。也可以看下<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/tag-plugins">标签插件（Tag Plugins）</a>。</li>
-<li><a href="#">Post not found: hello-word 如何引入图片</a></li>
-<li></li>
 </ol>
 <h2 id="title下如何跳转到页面"><a href="#title下如何跳转到页面" class="headerlink" title="title下如何跳转到页面"></a>title下如何跳转到页面</h2><blockquote>
 <p>看来tags标签多个，需要用[]包裹，用逗号分割。</p>
@@ -261,18 +258,14 @@
 
  
 
-<p><strong>引入方式</strong>2：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法二：该方法没有生效](/mock/good_month.png)</span><br></pre></td></tr></table></figure>
-
-<p> <img src="/mock.assets/good_month.png" alt="图片引用方法二"></p>
 <p><strong>引入方式3</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法三：该方法没有生效](/mock/good_month.png)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法三](../images/good_month.png)</span><br></pre></td></tr></table></figure>
 
-<p> <img src="/mock/good_month.png" alt="图片引用方法三"></p>
+<p> <img src="/../images/good_month.png" alt="图片引用方法三"></p>
 <p><strong>引入方式4</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法四：该方法没有生效](/images/good_month.png)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法四](/images/good_month.png)</span><br></pre></td></tr></table></figure>
 
-<p> <img src="/mock/good_month.png" alt="图片引用方法三"></p>
+<p> <img src="/images/good_month.png" alt="图片引用方法四"></p>
 <hr>
 <h2 id="报错解决"><a href="#报错解决" class="headerlink" title="报错解决"></a>报错解决</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g -d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Start processing</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Template render error: (unknown path)</span><br><span class="line">    Error: template names must be a string: undefined</span><br><span class="line">     ....</span><br><span class="line">&#125; Something&#x27;s wrong. Maybe you can find the solution here: %s https://hexo.io/docs/troubleshooting.html</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
