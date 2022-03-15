@@ -17,17 +17,17 @@
 <meta property="og:site_name" content="学习笔记搬迁">
 <meta property="og:description" content="本章主要是hexo的使用练习，若是新人接触hexo，应该有点用吧。。。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/mock.assets/image-20220314105427125.png">
+<meta property="og:image" content="http://example.com/images/image-20220314105427125.png">
 <meta property="og:image" content="http://example.com/images/good_month.png">
 <meta property="og:image" content="http://example.com/images/good_month.png">
-<meta property="og:image" content="http://example.com/mock.assets/image-20220314120605314.png">
+<meta property="og:image" content="http://example.com/images/image-20220314120605314.png">
 <meta property="article:published_time" content="2022-03-13T14:21:47.000Z">
-<meta property="article:modified_time" content="2022-03-15T14:51:05.474Z">
+<meta property="article:modified_time" content="2022-03-15T14:57:12.765Z">
 <meta property="article:author" content="Junode">
 <meta property="article:tag" content="用于测试图片是否成功的">
 <meta property="article:tag" content="随笔">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/mock.assets/image-20220314105427125.png">
+<meta name="twitter:image" content="http://example.com/images/image-20220314105427125.png">
   
     <link rel="alternative" href="/atom.xml" title="学习笔记搬迁" type="application/atom+xml">
   
@@ -82,9 +82,9 @@
 			
 				<li><a href="/" target="_blank">主页</a></li>
 			
-				<li><a href="https://github.com/junode/junode.github.io" target="_blank">技术笔记</a></li>
+				<li><a href="/tags/%E9%9A%8F%E7%AC%94/" target="_blank">其他/随笔</a></li>
 			
-				<li><a href="/tags/%E9%9A%8F%E7%AC%94/" target="_blank">随笔</a></li>
+				<li><a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" target="_blank">性能优化</a></li>
 			
 			</ul>
 		</nav>
@@ -154,9 +154,9 @@
 				
 					<li style="width: 33.333333333333336%"><a href="/">主页</a></li>
 		        
-					<li style="width: 33.333333333333336%"><a target="_blank" rel="noopener" href="https://github.com/junode/junode.github.io">技术笔记</a></li>
+					<li style="width: 33.333333333333336%"><a href="/tags/%E9%9A%8F%E7%AC%94/">其他/随笔</a></li>
 		        
-					<li style="width: 33.333333333333336%"><a href="/tags/%E9%9A%8F%E7%AC%94/">随笔</a></li>
+					<li style="width: 33.333333333333336%"><a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a></li>
 		        
 				</ul>
 			</nav>
@@ -200,7 +200,7 @@
       <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
       <i class="icon-statistics"></i>
       <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">826字</span>
+      <span class="post-count">818字</span>
     </span>
   </span>
 
@@ -247,22 +247,22 @@
 <p>看来tags标签多个，需要用[]包裹，用逗号分割。</p>
 </blockquote>
 <p>当前<code>随笔</code>链接已经可以跳转了。如下所示：</p>
-<p><img src="/mock.assets/image-20220314105427125.png" alt="image-20220314105427125"></p>
+<p><img src="/../images/image-20220314105427125.png" alt="image-20220314105427125"></p>
 <p>关于随笔的配置在<code>yiliya/._config.yml</code>的配置如下：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Header-菜单</span></span><br><span class="line"><span class="attr">menu:</span></span><br><span class="line">  <span class="string">主页:</span> <span class="string">/</span></span><br><span class="line">  <span class="string">技术笔记:</span> <span class="string">https://github.com/junode/junode.github.io</span></span><br><span class="line">  <span class="string">随笔:</span> <span class="string">/tags/随笔/</span></span><br><span class="line"><span class="comment"># 表明根据我们文章题头的tags标签下的随笔进行分类的。</span></span><br></pre></td></tr></table></figure>
 
 <p>通过<code>hexo new post mock</code>创建一个mock.md文件和mock文件夹。在mock文件夹中放入一张图片，然后再mock.md中引用，看是否生效。</p>
-<h2 id="如何引入图片"><a href="#如何引入图片" class="headerlink" title="如何引入图片"></a>如何引入图片</h2><p>引入图片的若干方式，而仅有第一种生效了，是我太搓了吧。。。</p>
+<h2 id="如何引入图片"><a href="#如何引入图片" class="headerlink" title="如何引入图片"></a>如何引入图片</h2><p>引入图片的若干方式，第一种没有生效。。。</p>
 <p><strong>引入方式1：</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% asset_img test.png 唯一生效的方式 %&#125;</span><br></pre></td></tr></table></figure>
 
  
 
-<p><strong>引入方式3</strong>：</p>
+<p><strong>引入方式2</strong>：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法三](../images/good_month.png)</span><br></pre></td></tr></table></figure>
 
 <p> <img src="/../images/good_month.png" alt="图片引用方法三"></p>
-<p><strong>引入方式4</strong>：</p>
+<p><strong>引入方式3</strong>：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法四](/images/good_month.png)</span><br></pre></td></tr></table></figure>
 
 <p> <img src="/images/good_month.png" alt="图片引用方法四"></p>
@@ -270,7 +270,7 @@
 <h2 id="报错解决"><a href="#报错解决" class="headerlink" title="报错解决"></a>报错解决</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g -d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Start processing</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Template render error: (unknown path)</span><br><span class="line">    Error: template names must be a string: undefined</span><br><span class="line">     ....</span><br><span class="line">&#125; Something&#x27;s wrong. Maybe you can find the solution here: %s https://hexo.io/docs/troubleshooting.html</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>渲染错误。思考了下之前没有报错和报错前差异，是我将放在<code>代码块</code>的文章引用，直接拿出来就报错的。从而将其放在代码块中就不会报错了。如图：</p>
-<p><img src="/mock.assets/image-20220314120605314.png" alt="image-20220314120605314"></p>
+<p><img src="/../images/image-20220314120605314.png" alt="image-20220314120605314"></p>
 <p><strong>文章参考</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. Hexo-修改Hexo主题：https://www.jianshu.com/p/33bc0a0a6e90</span><br><span class="line">2. yilia设置分类和标签、设置随笔、设置归档：https://blog.csdn.net/qq_40609008/article/details/120198623</span><br><span class="line">3. hexo使用theme出现“ &#123;% extends ‘_layout.swig‘ %&#125; &#123;% import ‘_macro/post.swig‘ as post_template %&#125;“问题：https://blog.csdn.net/qq_39898645/article/details/109181736</span><br><span class="line">4. hexo网站官方文档：https://hexo.io/zh-cn/docs/setup</span><br></pre></td></tr></table></figure>
 
@@ -385,11 +385,15 @@
 
 <nav id="article-nav">
   
-  
-    <a href="/2022/03/13/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">搭建github+hexo页面</div>
-      <i class="icon-circle-right"></i>
+    <a href="/2022/03/15/arthas%E7%9A%84%E5%85%A5%E9%97%A8/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          arthas入门
+        
+      </div>
     </a>
+  
   
 </nav>
 
@@ -555,6 +559,18 @@
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">性能优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">arthas</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
             
             <div class="clearfix"></div>

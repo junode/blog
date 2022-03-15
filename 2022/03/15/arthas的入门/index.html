@@ -6,21 +6,28 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>学习笔记搬迁</title>
+  <title>arthas入门 | 学习笔记搬迁</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-    
-    <!-- <meta name="keywords" content="">
-    <meta name="description" content=""> -->
-  
-  <meta property="og:type" content="website">
-<meta property="og:title" content="学习笔记搬迁">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="Arthas 是Alibaba开源的Java诊断工具。我这边仅用于线上代码阻塞点诊断。这里仅是概述下自己的学习过程，以及当前仅使用的trace命令。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="arthas入门">
+<meta property="og:url" content="http://example.com/2022/03/15/arthas%E7%9A%84%E5%85%A5%E9%97%A8/index.html">
 <meta property="og:site_name" content="学习笔记搬迁">
+<meta property="og:description" content="Arthas 是Alibaba开源的Java诊断工具。我这边仅用于线上代码阻塞点诊断。这里仅是概述下自己的学习过程，以及当前仅使用的trace命令。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/image-20220310145212394.png">
+<meta property="og:image" content="http://example.com/images/image-20220315231046876.png">
+<meta property="og:image" content="http://example.com/images/image-20220315230901645.png">
+<meta property="article:published_time" content="2022-03-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-15T15:21:45.790Z">
 <meta property="article:author" content="Junode">
+<meta property="article:tag" content="性能优化">
+<meta property="article:tag" content="arthas">
+<meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/image-20220310145212394.png">
   
     <link rel="alternative" href="/atom.xml" title="学习笔记搬迁" type="application/atom+xml">
   
@@ -165,19 +172,14 @@
               class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-
-  
-    <article id="post-arthas的入门" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-arthas的入门" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
   
   
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2022/03/15/arthas%E7%9A%84%E5%85%A5%E9%97%A8/" target="_blank">arthas入门</a>
-  
+    <h1 class="article-title" itemprop="name">
+      arthas入门
     </h1>
   
 
@@ -191,6 +193,27 @@
   
   
     
+<div style="margin-top:10px;">
+  <span class="post-time">
+    <span class="post-meta-item-icon">
+      <!-- fonts.scss -->
+      <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
+      <i class="icon-statistics"></i>
+      <span class="post-meta-item-text"> 字数统计:</span>
+      <span class="post-count">501字</span>
+    </span>
+  </span>
+
+  <span class="post-time">
+    &nbsp; | &nbsp;
+    <span class="post-meta-item-icon">
+      <i class="icon-book icon"></i>
+      <span class="post-meta-item-text"> 阅读时长≈</span>
+      <span class="post-count">2分</span>
+    </span>
+  </span>
+</div>
+
 
   
   </header>
@@ -198,13 +221,51 @@
   <div class="article-entry" itemprop="articleBody">
     
     <p><code>Arthas</code> 是Alibaba开源的Java诊断工具。我这边仅用于线上代码阻塞点诊断。这里仅是概述下自己的学习过程，以及当前仅使用的trace命令。</p>
-    
-    <a class="article-more-a" href="/2022/03/15/arthas%E7%9A%84%E5%85%A5%E9%97%A8/#more">more >></a>
-    
-    
+<span id="more"></span>
+
+<h3 id="arthas使用说明"><a href="#arthas使用说明" class="headerlink" title="arthas使用说明"></a>arthas使用说明</h3><blockquote>
+<p>官方文档：<a target="_blank" rel="noopener" href="https://arthas.aliyun.com/en-us/%E3%80%82">https://arthas.aliyun.com/en-us/。</a></p>
+<p>bilibili视频：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Up4y1x7wE?from=search&amp;seid=9057575810030071138&amp;spm_id_from=333.337.0.0">https://www.bilibili.com/video/BV1Up4y1x7wE?from=search&amp;seid=9057575810030071138&amp;spm_id_from=333.337.0.0</a></p>
+<p>对应文档：<a target="_blank" rel="noopener" href="https://bright-boy.gitee.io/technical-notes/#/jvm/arthas%E3%80%82">https://bright-boy.gitee.io/technical-notes/#/jvm/arthas。</a></p>
+</blockquote>
+<p>对于安装，直接下载压缩包：<a target="_blank" rel="noopener" href="https://maven.aliyun.com/repository/public/com/taobao/arthas/arthas-packaging/3.1.7/arthas-packaging-3.1.7-bin.zip%EF%BC%9B">https://maven.aliyun.com/repository/public/com/taobao/arthas/arthas-packaging/3.1.7/arthas-packaging-3.1.7-bin.zip；</a></p>
+<p>目录如下：</p>
+<p><img src="/../images/image-20220310145212394.png" alt="image-20220310145212394"></p>
+<p>启动启动arthas命令如下：<code>java -jar arthas-boot</code>。<strong>注意，在启动arthas之前，一定要有一个java进程在运行</strong>，因为等下在启动的时候需要指定粘附的java进程。比如这里是理财代销，就粘附理财代销的进程。如下：</p>
+<p><img src="/../images/image-20220315231046876.png" alt="image-20220315231046876"></p>
+<p>在启动之后，我们就做以下demo熟悉下。</p>
+<p><img src="/../images/image-20220315230901645.png" alt="image-20220315230901645"></p>
+<p><code>trace com.junode.demo.impl.DDDServiceImpl executePrefix</code>，指定的是跟踪 DDDServiceImpl 的executePrefix方法的执行耗时。其中标红的部分是执行耗时最长的，也是我们需要进一步观察的execute方法调用耗时情况。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Press Q or Ctrl+C to abort.</span><br><span class="line">Affect(class-cnt:21 , method-cnt:1) cost <span class="keyword">in</span> 1762 ms.</span><br><span class="line">`---ts=2022-03-10 14:21:39;thread_name=http-nio-41000-exec-474;<span class="built_in">id</span>=53d;is_daemon=<span class="literal">true</span>;priority=5;TCCL=org.springframework.boot.web.embedded.tomcat.TomcatEmbeddedWebappClassLoader@4607e729</span><br><span class="line">    `---[164.467002ms] com.junode.core.AbstractSync:loop()</span><br><span class="line">        +---[0.068298ms] com.junode.core.AbstractSync:getStep() <span class="comment">#167</span></span><br><span class="line">        +---[127.492471ms] com.junode.core.AbstractSync:runStep() <span class="comment">#177</span></span><br><span class="line">        `---[36.528079ms] com.junode.core.AbstractSync:loop() <span class="comment">#177</span></span><br><span class="line">            `---[35.45139ms] com.junode.core.AbstractSync:loop()</span><br><span class="line">                +---[0.009518ms] com.junode.core.AbstractSync:getStep() <span class="comment">#167</span></span><br><span class="line">                +---[7.570869ms] com.junode.core.AbstractSync:runStep() <span class="comment">#177</span></span><br><span class="line">                `---[27.756095ms] com.junode.core.AbstractSync:loop() <span class="comment">#177</span></span><br><span class="line">                    `---[27.591116ms] com.junode.core.AbstractSync:loop()</span><br><span class="line">                        +---[0.004497ms] com.junode.core.AbstractContext:getId() <span class="comment">#154</span></span><br><span class="line">                        +---[0.015143ms] org.slf4j.Logger:trace() <span class="comment">#154</span></span><br><span class="line">                        `---[26.28387ms] com.junode.core.AbstractSync:confirm() <span class="comment">#155</span></span><br></pre></td></tr></table></figure>
+
+<p>其中，耗时最长的时间为<code>127.492471ms</code>，对于该耗时长的类，我们可以进一步跟踪其阻塞点究竟是在哪里，然后对齐进行优化。</p>
+<hr>
+<p>关于arthas的其他命令使用，可以查看阿尔萨斯官方文档。一款非常简单且好用的工具。</p>
 
     
 
+    
+
+    
+    <div class="declare"> 
+      <ul class="post-copyright">
+        <li>
+          <strong>本文作者：</strong>
+          Junode
+        </li>
+        <li>
+          <strong>本文链接：</strong>
+          <a href="http://example.com/2022/03/15/arthas的入门/" title="arthas入门" target="_blank">http://example.com/2022/03/15/arthas的入门/</a>
+        </li>
+        
+        <li>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，均采用 <a href="https://github.com/JoeyBling/hexo-theme-yilia-plus/blob/master/LICENSE" rel="external nofollow" target="_blank">MIT</a> 许可协议。转载请注明出处！
+        </li>
+        
+      </ul>
+    </div>
     
 
   </div>
@@ -233,16 +294,76 @@
     
 
     
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2022/03/15/arthas%E7%9A%84%E5%85%A5%E9%97%A8/">展开全文 >></a>
-    </p>
+
     
+    
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <!-- <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a> -->
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+     <!-- <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/03/15/arthas%E7%9A%84%E5%85%A5%E9%97%A8/" alt="微信分享二维码"> -->
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
 
     
     <div class="clearfix"></div>
   </div>
   </div>
 </article>
+
+
+<nav id="article-nav">
+  
+  
+    <a href="/2022/03/13/hexo%E4%BD%BF%E7%94%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">练习hexo使用</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -263,100 +384,14 @@
 
 
 
-  
-    <article id="post-hexo使用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2022/03/13/hexo%E4%BD%BF%E7%94%A8/" target="_blank">练习hexo使用</a>
-  
-    </h1>
-  
-
-
-  
-  
-<a href="/2022/03/13/hexo%E4%BD%BF%E7%94%A8/" class="archive-article-date">
-        <time datetime="2022-03-13T14:21:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-13</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <p>本章主要是hexo的使用练习，若是新人接触hexo，应该有点用吧。。。</p>
-    
-    <a class="article-more-a" href="/2022/03/13/hexo%E4%BD%BF%E7%94%A8/#more">more >></a>
-    
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">用于测试图片是否成功的</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-    
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2022/03/13/hexo%E4%BD%BF%E7%94%A8/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
 
 
 
 
-  
-  
+
+
+
+
 
 
           </div>
@@ -384,8 +419,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
