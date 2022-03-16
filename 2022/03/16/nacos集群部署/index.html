@@ -6,19 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>categories|分类|归档 | 学习笔记搬迁</title>
+  <title>nacos集群部署 | 学习笔记搬迁</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta property="og:type" content="website">
-<meta property="og:title" content="categories|分类|归档">
-<meta property="og:url" content="http://example.com/categories/index.html">
+  <meta name="description" content="工作中需要nacos部署集群，就记录下当时大概操作流程。主要留意的是，在部署集群下，先将配置备份。不然需要考虑启动集群节点顺序问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nacos集群部署">
+<meta property="og:url" content="http://example.com/2022/03/16/nacos%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/index.html">
 <meta property="og:site_name" content="学习笔记搬迁">
+<meta property="og:description" content="工作中需要nacos部署集群，就记录下当时大概操作流程。主要留意的是，在部署集群下，先将配置备份。不然需要考虑启动集群节点顺序问题。">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-03-14T02:44:28.000Z">
-<meta property="article:modified_time" content="2022-03-14T03:05:56.759Z">
+<meta property="og:image" content="http://example.com/images/image-20220316115037514.png">
+<meta property="article:published_time" content="2022-03-16T03:46:14.000Z">
+<meta property="article:modified_time" content="2022-03-16T03:55:13.464Z">
 <meta property="article:author" content="Junode">
+<meta property="article:tag" content="nacos">
+<meta property="article:tag" content="集群">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/image-20220316115037514.png">
   
     <link rel="alternative" href="/atom.xml" title="学习笔记搬迁" type="application/atom+xml">
   
@@ -163,22 +169,22 @@
               class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="categories-" class="article article-type-categories " itemscope itemprop="blogPost">
+            <article id="post-nacos集群部署" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
   
   
     <h1 class="article-title" itemprop="name">
-      categories|分类|归档
+      nacos集群部署
     </h1>
   
 
 
   
   
-<a href="/categories/index.html" class="archive-article-date">
-        <time datetime="2022-03-14T02:44:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-14</time>
+<a href="/2022/03/16/nacos%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" class="archive-article-date">
+        <time datetime="2022-03-16T03:46:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-16</time>
 </a>
 
   
@@ -191,7 +197,7 @@
       <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
       <i class="icon-statistics"></i>
       <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">0字</span>
+      <span class="post-count">544字</span>
     </span>
   </span>
 
@@ -200,7 +206,7 @@
     <span class="post-meta-item-icon">
       <i class="icon-book icon"></i>
       <span class="post-meta-item-text"> 阅读时长≈</span>
-      <span class="post-count">1分</span>
+      <span class="post-count">2分</span>
     </span>
   </span>
 </div>
@@ -211,7 +217,39 @@
   
   <div class="article-entry" itemprop="articleBody">
     
-    
+    <p>工作中需要nacos部署集群，就记录下当时大概操作流程。主要留意的是，在部署集群下，先将配置备份。不然需要考虑启动集群节点顺序问题。</p>
+<span id="more"></span>
+
+<ol>
+<li><p>在开启部署nacos集群之前，先将单点的配置复制拷贝一份！！！</p>
+</li>
+<li><p>确定要在哪几台服务器部署nacos集群，如：172.172.27.69，172.172.27.70，172.172.27.71。</p>
+</li>
+<li><p>修改nacos&#x2F;conf&#x2F;的cluster.conf配置信息。若没有，则从 cluster.conf.example 复制一份，重命名为  cluster.conf文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span>  cluster.conf.example   cluster.conf</span><br><span class="line">vi cluster.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 填入内容如下：</span></span><br><span class="line">172.172.27.69:8848</span><br><span class="line">172.172.27.70:8848</span><br><span class="line">172.172.27.71:8848</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>其中一份nacos配置修改完成后，就将nacos拷贝到其他服务器。我单点是在69部署的，将nacos拷贝到其他两台服务器：</p>
+<ol>
+<li>scp -r nacos 172.172.27.70 &#x2F;home&#x2F;fasm&#x2F;util&#x2F;</li>
+<li>scp -r nacos 172.172.27.71 &#x2F;home&#x2F;fasm&#x2F;util&#x2F;</li>
+</ol>
+</li>
+<li><p>修改配置文件后，我们这里就用nacos内置数据源启动即可。逐台启动nacos，启动命令如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh startup.sh -p embedded</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>nacos启动之后，当我们想修改配置的时候，仅需修改其中一台，其他两台的配置会被同步过去（nacos维护）。</p>
+</li>
+<li><p>修改完配置后，就修改我们微服务的配置文件，主要是将nacos的服务发现和配置改成多个来源即可，截图如下：</p>
+<p><img src="/../images/image-20220316115037514.png" alt="image-20220316115037514"></p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.port</span>=<span class="string">8881</span></span><br><span class="line"><span class="attr">spring.application.name</span>=<span class="string">WmpAppGateway</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.discovery.server-addr</span>=<span class="string">172.172.27.69:8848,172.172.27.70:8848,172.172.27.71:8848</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.discovery.namespace</span>=<span class="string">aa9f7e56-3db2-4bd7-a3f7-f9da15a0ee30</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.server-addr</span>=<span class="string">172.172.27.69:8848,172.172.27.70:8848,172.172.27.71:8848</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.config.enabled</span>=<span class="string">false</span></span><br><span class="line"><span class="attr">spring.cloud.nacos.discovery.namespace</span>=<span class="string">aa9f7e56-3db2-4bd7-a3f7-f9da15a0ee30</span></span><br><span class="line"><span class="attr">logging.level.org.springframework.cloud.gateway.filter.LoadBalancerClientFilter</span>=<span class="string">TRACE</span></span><br><span class="line"><span class="attr">management.endpoint.health.show-details</span>=<span class="string">ALWAYS</span></span><br><span class="line"><span class="attr">management.endpoints.web.exposure.include</span>=<span class="string">health,info,gateway</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="集群部署文章参考："><a href="#集群部署文章参考：" class="headerlink" title="集群部署文章参考："></a>集群部署文章参考：</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/cluster-mode-quick-start.html%EF%BC%9A%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%EF%BC%88%E7%9C%8B%E8%BF%99%E4%B8%AA%E5%B0%B1%E8%A1%8C%E4%BA%86%EF%BC%89%E3%80%82">https://nacos.io/zh-cn/docs/cluster-mode-quick-start.html：官方文档（看这个就行了）。</a></li>
+<li><a target="_blank" rel="noopener" href="https://bbs.csdn.net/topics/603607441%EF%BC%9ANacos2.0.3%E9%85%8D%E7%BD%AE%E6%8C%81%E4%B9%85%E5%8C%96%E4%B8%8E%E9%9B%86%E7%BE%A4%EF%BC%88%E8%B7%9F%E7%9D%80%E6%AD%A5%E9%AA%A4%E8%B5%B0%EF%BC%8C%E7%BB%9D%E5%AF%B9%E4%B8%8D%E4%BC%9A%E5%87%BA%E9%94%99%EF%BC%89">https://bbs.csdn.net/topics/603607441：Nacos2.0.3配置持久化与集群（跟着步骤走，绝对不会出错）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36763419/article/details/121179174%EF%BC%9ANacos">https://blog.csdn.net/qq_36763419/article/details/121179174：Nacos</a> 集群与持久化配置（2.0.+ 版）</li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/snail_spoor/article/details/117908109%EF%BC%9ANacos">https://blog.csdn.net/snail_spoor/article/details/117908109：Nacos</a> 2.0.1 集群部署</li>
+</ol>
+
     
 
     
@@ -225,7 +263,7 @@
         </li>
         <li>
           <strong>本文链接：</strong>
-          <a href="http://example.com/categories/index.html" title="categories|分类|归档" target="_blank">http://example.com/categories/index.html</a>
+          <a href="http://example.com/2022/03/16/nacos集群部署/" title="nacos集群部署" target="_blank">http://example.com/2022/03/16/nacos集群部署/</a>
         </li>
         
         <li>
@@ -242,6 +280,21 @@
   <div class="article-info article-info-index">
     
     
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">nacos</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">集群</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
     
 
     
@@ -292,7 +345,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-     <!-- <img src="//pan.baidu.com/share/qrcode?url=http://example.com/categories/" alt="微信分享二维码"> -->
+     <!-- <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/03/16/nacos%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" alt="微信分享二维码"> -->
     </div>
 </div>
 
@@ -304,6 +357,16 @@
   </div>
 </article>
 
+
+<nav id="article-nav">
+  
+  
+    <a href="/2022/03/15/arthas%E7%9A%84%E5%85%A5%E9%97%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">arthas入门</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
 
 
 <aside class="wrap-side-operation">
@@ -321,6 +384,16 @@
         
     </div>
 </aside>
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -351,7 +424,7 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
