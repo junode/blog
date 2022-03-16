@@ -6,28 +6,26 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>练习hexo使用 | 学习笔记搬迁</title>
+  <title>工作中遇到的bug | 学习笔记搬迁</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="description" content="本章主要是hexo的使用练习，若是新人接触hexo，应该有点用吧。。。">
+  <meta name="description" content="工作中遇到的一些未解之谜。。。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="练习hexo使用">
-<meta property="og:url" content="http://example.com/2022/03/13/hexo%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:title" content="工作中遇到的bug">
+<meta property="og:url" content="http://example.com/2022/03/16/%E5%B7%A5%E4%BD%9C%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84bug/index.html">
 <meta property="og:site_name" content="学习笔记搬迁">
-<meta property="og:description" content="本章主要是hexo的使用练习，若是新人接触hexo，应该有点用吧。。。">
+<meta property="og:description" content="工作中遇到的一些未解之谜。。。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/images/image-20220314105427125.png">
-<meta property="og:image" content="http://example.com/images/good_month.png">
-<meta property="og:image" content="http://example.com/images/good_month.png">
-<meta property="og:image" content="http://example.com/images/image-20220314120605314.png">
-<meta property="article:published_time" content="2022-03-13T14:21:47.000Z">
-<meta property="article:modified_time" content="2022-03-15T14:57:12.765Z">
+<meta property="og:image" content="http://example.com/images/1622627566901.png">
+<meta property="og:image" content="http://example.com/images/image-20220219165223459.png">
+<meta property="article:published_time" content="2022-03-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-16T08:41:31.604Z">
 <meta property="article:author" content="Junode">
-<meta property="article:tag" content="用于测试图片是否成功的">
-<meta property="article:tag" content="随笔">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="bug">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/image-20220314105427125.png">
+<meta name="twitter:image" content="http://example.com/images/1622627566901.png">
   
     <link rel="alternative" href="/atom.xml" title="学习笔记搬迁" type="application/atom+xml">
   
@@ -172,22 +170,22 @@
               class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-hexo使用" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-工作中遇到的bug" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
   
   
     <h1 class="article-title" itemprop="name">
-      练习hexo使用
+      工作中遇到的bug
     </h1>
   
 
 
   
   
-<a href="/2022/03/13/hexo%E4%BD%BF%E7%94%A8/" class="archive-article-date">
-        <time datetime="2022-03-13T14:21:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-13</time>
+<a href="/2022/03/16/%E5%B7%A5%E4%BD%9C%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84bug/" class="archive-article-date">
+        <time datetime="2022-03-15T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-16</time>
 </a>
 
   
@@ -200,7 +198,7 @@
       <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
       <i class="icon-statistics"></i>
       <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">818字</span>
+      <span class="post-count">2.7k字</span>
     </span>
   </span>
 
@@ -209,7 +207,7 @@
     <span class="post-meta-item-icon">
       <i class="icon-book icon"></i>
       <span class="post-meta-item-text"> 阅读时长≈</span>
-      <span class="post-count">3分</span>
+      <span class="post-count">11分</span>
     </span>
   </span>
 </div>
@@ -220,60 +218,94 @@
   
   <div class="article-entry" itemprop="articleBody">
     
-    <p>本章主要是hexo的使用练习，若是新人接触hexo，应该有点用吧。。。</p>
+    <p>工作中遇到的一些未解之谜。。。</p>
 <span id="more"></span>
 
-<h2 id="github和hexo整理"><a href="#github和hexo整理" class="headerlink" title="github和hexo整理"></a>github和hexo整理</h2><p>文章参考：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GitHub Pages + Hexo搭建个人博客网站，史上最全教程：https://blog.csdn.net/yaorongke/article/details/119089190</span><br><span class="line"></span><br><span class="line">参考官网的说明进行辅助简。</span><br></pre></td></tr></table></figure>
-
-<p>搭建步骤：</p>
+<h3 id="1、SpringBoot项目项目启动时创建临时目录-x2F-tmp的隐藏bug"><a href="#1、SpringBoot项目项目启动时创建临时目录-x2F-tmp的隐藏bug" class="headerlink" title="1、SpringBoot项目项目启动时创建临时目录&#x2F;tmp的隐藏bug"></a>1、SpringBoot项目项目启动时创建临时目录&#x2F;tmp的隐藏bug</h3><h4 id="1-1、前言"><a href="#1-1、前言" class="headerlink" title="1.1、前言"></a>1.1、前言</h4><p>最开始的需求就是想自制一个maven的docker镜像，但发觉博主文章有点质量，就浏览了文章列表，发现了该问题，然后瞄了自己公司服务器，果断在java启动时加上了<code>-Djava.io.tmpdir=自定义目录</code>参数，具体可看《jenkins –&gt; jenkins安装部署.md》，然后又发觉了一堆问题，wmpapp起不来了、然后管理台起不来了（主因是docker下volumn2的磁盘满了，具体可看《Linux -&gt; linux实操笔记.md》，管理台起不来的原因是main class找不到，具体可看当前文件的其他bug章节）。</p>
+<h4 id="1-2、正文"><a href="#1-2、正文" class="headerlink" title="1.2、正文"></a>1.2、正文</h4><p>过完年回来，测试同事发现我们服务器所有的上传文件都不能使用了，全部报500错误：<br> java.io.IOException: The temporary upload location [&#x2F;tmp&#x2F;tomcat.xxxxx.20100&#x2F;work&#x2F;Tomcat&#x2F;localhost&#x2F;ROOT] is not valid </p>
+<p><strong>原因：</strong></p>
 <ol>
-<li>github的repository准备，然后git clone到本地；</li>
-<li>hexo安装：<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">https://hexo.io/zh-cn/docs/</a></li>
-<li>通过hexo建立网站：<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/setup%E3%80%82%E5%9C%A8git">https://hexo.io/zh-cn/docs/setup。在git</a> clone的目录下执行如下操作：<ol>
-<li>hexo init <folder></folder></li>
-<li>cd <folder></folder></li>
-<li>npm install。生成目录说明，看官网文档吧。</li>
+<li>spring boot的应用服务在启动的时候，会生成在操作系统的&#x2F;tmp目录下生成一个Tomcat.*的文件目录，用于”java.io.tmpdir”文件流操作</li>
+<li>程序对文件的操作时：会生成临时文件，暂存在临时文件中；<ol>
+<li>linux 系统的tmpwatch 命令会删除10天未使用的临时文件；</li>
+<li>长时间不操作，导致&#x2F;tmp下面的tomcat临时文件目录被删除，且删除的文件不可恢复，上传文件时获取不到文件目录，报错</li>
 </ol>
 </li>
-<li>使用主题：yiliya，通过官网 <a target="_blank" rel="noopener" href="https://hexo.io/themes/%EF%BC%8C%E6%89%BE%E5%88%B0%E4%B8%BB%E9%A2%98%E4%B8%8B%E7%9A%84yiliya-plus%EF%BC%8C%E8%AF%A5%E4%B8%BB%E9%A2%98%E6%98%AF%E6%88%91%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E3%80%82">https://hexo.io/themes/，找到主题下的yiliya-plus，该主题是我所需要的。</a></li>
-<li>发布到github：hexo g -d</li>
-<li>本地启动,<a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a> 查看效果：hexo s。</li>
-<li>在看到效果后，可能需要设置自己的私有属性，可以通过修改两个配置文件来完成，一个是全局配置文件：<code>./junode.github.io/note/_config.yml</code>，一个是当前主题的配置文件：<code>./junode.github.io/note/themes/yiliya/_config.yml</code>。其中关于配置文件的说明，可以参考：<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/configuration">https://hexo.io/zh-cn/docs/configuration</a></li>
-<li>然后我们开始创建自己文件了。一般我就只用：hexo new fileName，生成的md文件是在<code>source/_post</code>目录下。关于创建文件的说明可以参考：<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/writing%E3%80%82">https://hexo.io/zh-cn/docs/writing。</a></li>
-<li>当我们创建文件好后，要编辑文件，若想引入图片，可能会有些小问题（主要是我自己的问题…）。图片的引入不成功，我这边引用成功的示例：<code> &#123;% asset_img test.png 唯一生效的方式 %&#125;</code>。也可以看下<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/tag-plugins">标签插件（Tag Plugins）</a>。</li>
 </ol>
-<h2 id="title下如何跳转到页面"><a href="#title下如何跳转到页面" class="headerlink" title="title下如何跳转到页面"></a>title下如何跳转到页面</h2><blockquote>
-<p>看来tags标签多个，需要用[]包裹，用逗号分割。</p>
+<p><strong>解决方案：</strong></p>
+<ol>
+<li>重启服务，会重新生成&#x2F;tmp&#x2F;tomcat…目录，但是生产环境不建议如此操作（临时方案）</li>
+<li>增加服务配置，自定义baseDir；启动时增加参数<code>-Djava.io.tmpdir=自定义目录</code></li>
+<li>修改tmpwatch 删除文件的逻辑，系统级别的命令，不建议操作</li>
+<li>编码的方式catch异常，生成删除的文件夹</li>
+<li>docker环境下，在Dockerfile中新增指令 VOLUME &#x2F;tmp 生成匿名卷不会被自动删除</li>
+</ol>
+<h4 id="1-3、文章参考"><a href="#1-3、文章参考" class="headerlink" title="1.3、文章参考"></a>1.3、文章参考</h4><ol>
+<li>Spring Boot上传文件的一个注意点<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6c6a126af8a2">https://www.jianshu.com/p/6c6a126af8a2</a></li>
+</ol>
+<h3 id="2、Spring-Boot-Maven-Plugin打包异常及三种解决方法：Unable-to-find-main-class"><a href="#2、Spring-Boot-Maven-Plugin打包异常及三种解决方法：Unable-to-find-main-class" class="headerlink" title="2、Spring Boot Maven Plugin打包异常及三种解决方法：Unable to find main class"></a>2、Spring Boot Maven Plugin打包异常及三种解决方法：Unable to find main class</h3><h4 id="2-1、前言"><a href="#2-1、前言" class="headerlink" title="2.1、前言"></a>2.1、前言</h4><p>jenkins启动报了此错误，然后就按照文章添加了如下内容：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.8.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">mainClass</span>&gt;</span>com.kayak.WmpService<span class="tag">&lt;/<span class="name">mainClass</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">includeSystemScope</span>&gt;</span>true<span class="tag">&lt;/<span class="name">includeSystemScope</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>repackage<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>执行clean package操作后，本地查看jar包，发觉相关文件有了MAINClass后，就提交，经过jenkinis打包就启动了。</p>
+<h4 id="2-2、正文"><a href="#2-2、正文" class="headerlink" title="2.2、正文"></a>2.2、正文</h4><h5 id="2-2-1、背景"><a href="#2-2-1、背景" class="headerlink" title="2.2.1、背景"></a>2.2.1、背景</h5><p>spring-boot项目，打包成可执行jar，项目内有两个带有main方法的类并且都使用了@SpringBootApplication注解（或者另一种情形：你有两个main方法并且所在类都没有使用@SpringBootApplication注解），pom.xml如下</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.3.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>repackage<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="2-2-2、问题"><a href="#2-2-2、问题" class="headerlink" title="2.2.2、问题"></a>2.2.2、问题</h5><ul>
+<li>执行mvn clean package，报错如下（说点不相关的，使用install同理。因为spring-boot:repackage目标（goal）被绑定在package构建阶段（phases），而package阶段在install阶段之前，指定构建阶段之前的阶段都会执行。详细参见：<a target="_blank" rel="noopener" href="http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html">Introduction to the Build Lifecycle</a>）</li>
+</ul>
+<blockquote>
+<p>[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:1.5.3.RELEASE:repackage (default) on project webapps-api-bid: Execution default of goal org.springframework.boot:spring-boot-maven-plugin:1.5.3.RELEASE:repackage failed: Unable to find a single main class from the following candidates [com.xx.api.main.ApiBidMain, com.xx.webapps.api.main.WebappsApiBidMain]</p>
 </blockquote>
-<p>当前<code>随笔</code>链接已经可以跳转了。如下所示：</p>
-<p><img src="/../images/image-20220314105427125.png" alt="image-20220314105427125"></p>
-<p>关于随笔的配置在<code>yiliya/._config.yml</code>的配置如下：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Header-菜单</span></span><br><span class="line"><span class="attr">menu:</span></span><br><span class="line">  <span class="string">主页:</span> <span class="string">/</span></span><br><span class="line">  <span class="string">技术笔记:</span> <span class="string">https://github.com/junode/junode.github.io</span></span><br><span class="line">  <span class="string">随笔:</span> <span class="string">/tags/随笔/</span></span><br><span class="line"><span class="comment"># 表明根据我们文章题头的tags标签下的随笔进行分类的。</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>执行mvn clean package spring-boot:repackage，报错如下，不如上面日志详细</li>
+</ul>
+<p>　　&gt; [ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:1.5.3.RELEASE:repackage (default) on project webapps-api-bid: Execution default of goal org.springframework.boot:spring-boot-maven-plugin:1.5.3.RELEASE:repackage failed: Unable to find main class</p>
+<h5 id="2-2-3、解决"><a href="#2-2-3、解决" class="headerlink" title="2.2.3、解决"></a>2.2.3、解决</h5><p>　　Note：参考<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#build-tool-plugins-maven-packaging">官网描述</a>，没有指定<mainClass>或者继承了spring-boot-starter-parent并且<start-class>属性未配置时，会自动寻找签名是<code>public static void main(String[] args)</code>的方法… 所以插件懵逼了，两个妹子和谁在一起呢…</start-class></mainClass></p>
+<h6 id="2-2-3-1、方案1"><a href="#2-2-3-1、方案1" class="headerlink" title="2.2.3.1、方案1"></a>2.2.3.1、方案1</h6><p>通用解决方法： <configuration>下配置mainClass，指定程序入口。</configuration></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.3.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mainClass</span>&gt;</span>com.xx.webapps.api.main.WebappsApiBidMain<span class="tag">&lt;/<span class="name">mainClass</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>repackage<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>通过<code>hexo new post mock</code>创建一个mock.md文件和mock文件夹。在mock文件夹中放入一张图片，然后再mock.md中引用，看是否生效。</p>
-<h2 id="如何引入图片"><a href="#如何引入图片" class="headerlink" title="如何引入图片"></a>如何引入图片</h2><p>引入图片的若干方式，第一种没有生效。。。</p>
-<p><strong>引入方式1：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% asset_img test.png 唯一生效的方式 %&#125;</span><br></pre></td></tr></table></figure>
+<p> Spring Boot Maven Plugin提供了几个目标（goal），我们在<executions>标签里配置的<em>repackage</em>对应<em>spring-boot:repackage</em>这个目标。 </executions></p>
+<blockquote>
+<ul>
+<li><strong><code>repackage</code></strong>: create a jar or war file that is auto-executable. It can replace the regular artifact or can be attached to the build lifecyle with a separate <strong>classifier</strong>.</li>
+<li><strong><code>run</code></strong>: run your Spring Boot application with several options to pass parameters to it.</li>
+<li><strong><code>start</code></strong> and <strong><code>stop</code></strong>: integrate your Spring Boot application to the <code>integration-test</code> phase so that the application starts before it.</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>The plugin rewrites your manifest, and in particular it manages the <strong>Main-Class</strong> and <strong>Start-Class</strong> entries, so if the defaults don’t work you have to configure those there (not in the jar plugin). The <strong>Main-Class</strong> in the manifest is actually controlled by the <strong>layout</strong> property of the boot plugin</p>
+<p>[译] 该插件重写了清单文件（MANIFEST.MF，也就是jar里面的清单文件），此文件管理着主类（Main-Class）和开始类（Start-Class）入口。清单文件中的Main-Class由layout控制</p>
+</blockquote>
+<p>　　这里的Start-Class就是我们配置的<mainClass>，而Main-Class受layout属性的控制，别被名字搞乱了（是不是很诡异？看看解决方法二就明白为啥如此诡异了）…. 来张图直观的感受下，对应使用上面xml配置打包后的清单文件（MANIFEST.MF）：</mainClass></p>
+<p><img src="/../images/1622627566901.png" alt="1622627566901"></p>
+<p>layout属性默认不需要配置，插件会自动推断。不同的layout属性清单文件里面的Main-Class也会相应的不同。比如layout不配置或者配置为JAR对应的Main-Class是JarLauncher，layout配置为WAR对应的Main-Class是WarLauncher。</p>
+<h6 id="2-2-3-2、方案2"><a href="#2-2-3-2、方案2" class="headerlink" title="2.2.3.2、方案2"></a>2.2.3.2、方案2</h6><p> <strong>如果你的pom继承自spring-boot-starter-parent（注意此前提）</strong>，也可以直接在<properties>配置<start-class>（其实这里的start-class直接对应清单文件里的Start-Class）： </start-class></properties></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">start-class</span>&gt;</span>com.xx.webapps.api.main.WebappsApiBidMain<span class="tag">&lt;/<span class="name">start-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
- 
-
-<p><strong>引入方式2</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法三](../images/good_month.png)</span><br></pre></td></tr></table></figure>
-
-<p> <img src="/../images/good_month.png" alt="图片引用方法三"></p>
-<p><strong>引入方式3</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![图片引用方法四](/images/good_month.png)</span><br></pre></td></tr></table></figure>
-
-<p> <img src="/images/good_month.png" alt="图片引用方法四"></p>
-<hr>
-<h2 id="报错解决"><a href="#报错解决" class="headerlink" title="报错解决"></a>报错解决</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g -d</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Start processing</span><br><span class="line">FATAL &#123;</span><br><span class="line">  err: Template render error: (unknown path)</span><br><span class="line">    Error: template names must be a string: undefined</span><br><span class="line">     ....</span><br><span class="line">&#125; Something&#x27;s wrong. Maybe you can find the solution here: %s https://hexo.io/docs/troubleshooting.html</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>渲染错误。思考了下之前没有报错和报错前差异，是我将放在<code>代码块</code>的文章引用，直接拿出来就报错的。从而将其放在代码块中就不会报错了。如图：</p>
-<p><img src="/../images/image-20220314120605314.png" alt="image-20220314120605314"></p>
-<p><strong>文章参考</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. Hexo-修改Hexo主题：https://www.jianshu.com/p/33bc0a0a6e90</span><br><span class="line">2. yilia设置分类和标签、设置随笔、设置归档：https://blog.csdn.net/qq_40609008/article/details/120198623</span><br><span class="line">3. hexo使用theme出现“ &#123;% extends ‘_layout.swig‘ %&#125; &#123;% import ‘_macro/post.swig‘ as post_template %&#125;“问题：https://blog.csdn.net/qq_39898645/article/details/109181736</span><br><span class="line">4. hexo网站官方文档：https://hexo.io/zh-cn/docs/setup</span><br></pre></td></tr></table></figure>
-
+<h6 id="2-2-3-2、方案3"><a href="#2-2-3-2、方案3" class="headerlink" title="2.2.3.2、方案3"></a>2.2.3.2、方案3</h6><p> 打包的的时候注释掉其他的@SpringBootApplication… 或者你有两处main方法并且都没有使用@SpringBootApplication注解，注释掉一个main方法….. 这就是第三种解决方法 </p>
+<h4 id="2-3、文章参考"><a href="#2-3、文章参考" class="headerlink" title="2.3、文章参考"></a>2.3、文章参考</h4><ol>
+<li>Spring Boot Maven Plugin打包异常及三种解决方法：Unable to find main class<a target="_blank" rel="noopener" href="https://www.cnblogs.com/thinking-better/p/7827368.html">https://www.cnblogs.com/thinking-better/p/7827368.html</a></li>
+</ol>
+<h3 id="3、产品限制信息优化"><a href="#3、产品限制信息优化" class="headerlink" title="3、产品限制信息优化"></a>3、产品限制信息优化</h3><p>产品限制信息字段，主要是涉及字段的累计校验，存在并发安全问题，需要根据字段上锁校验：可根据客户类型和产品类型，所需校验的字段不一样。其中我的做法是约定属性名称的后缀，用于标识该字段属于什么级别校验，不同级别的字段，他们校验有效期是不一样的，有的累计校验字段存活是一天，有的是整个产品生命周期。具体该限制信息校验还涉及表设计，表设计内容仅放在个人wps云文档。</p>
+<h3 id="4、网关URL请求体解析"><a href="#4、网关URL请求体解析" class="headerlink" title="4、网关URL请求体解析"></a>4、网关URL请求体解析</h3><p>泉州银行这边要求统一入口：如 <code>http://172.172.10.110:8080</code> 作为入口，然后具体的请求信息写在请求体。当时对于这问题的解决方法：</p>
+<ol>
+<li>因网关请求体仅被消费一次，解析URL后需要将内容塞回去：ThreadLocal + 网关拦截器GlobalFilter（好像是这个）；</li>
+<li>网关的函数式编程router声明缓存请求体，相当于是可复用请求体，这样在拦截器中就可以直接消费了。</li>
+<li>重写负载均衡器，让最终发起调用的地方调用我们的重载类。</li>
+</ol>
+<h3 id="5、oracle启动之后连接不上去"><a href="#5、oracle启动之后连接不上去" class="headerlink" title="5、oracle启动之后连接不上去"></a>5、oracle启动之后连接不上去</h3><p>网上找了下文章，没有太明白其中缘由，但是问题解决了：<a target="_blank" rel="noopener" href="https://www.freesion.com/article/36861230690/%E3%80%82%E8%BF%99%E8%BE%B9%E6%96%87%E7%AB%A0%E4%B8%BB%E8%A6%81%E6%8F%90%E5%8F%8A%E5%88%B0oracle%E8%BF%9E%E6%8E%A5%E9%9A%8F%E6%9C%BA%E6%95%B0%E8%BF%87%E5%A4%A7%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%88%E5%A5%BD%E5%83%8F%E8%BF%98%E6%8F%90%E5%88%B0%E4%BA%86%E6%B7%B7%E4%B9%B1%E5%BA%A6/%E7%86%B5%EF%BC%89%E7%9A%84%E6%A6%82%E5%BF%B5%E3%80%82%E3%80%82%E3%80%82">https://www.freesion.com/article/36861230690/。这边文章主要提及到oracle连接随机数过大的问题（好像还提到了混乱度/熵）的概念。。。</a></p>
+<h3 id="6、nginx和网关存在大量TIME-WAIT问题"><a href="#6、nginx和网关存在大量TIME-WAIT问题" class="headerlink" title="6、nginx和网关存在大量TIME_WAIT问题"></a>6、nginx和网关存在大量TIME_WAIT问题</h3><p><img src="/../images/image-20220219165223459.png" alt="image-20220219165223459"></p>
+<p>这个问题在在网找了答案，设置ipv4参数和wsl连接时长减半，这个都不能缓解这个问题。该问题是在并发增加的时候出现的，我这边通过优化交易，降低响应时长，问题就没有出现了。</p>
+<h3 id="7、tps降为零的问题"><a href="#7、tps降为零的问题" class="headerlink" title="7、tps降为零的问题"></a>7、tps降为零的问题</h3><p><strong>压测过程中，其中理财赎回交易在并发200时TPS会变为0，将undertow容器改成tomcat之后，问题没有出现。</strong></p>
+<h3 id="8、redis超时问题"><a href="#8、redis超时问题" class="headerlink" title="8、redis超时问题"></a>8、redis超时问题</h3><p>应该是大对象造成的。将大对象的String 改成 hash结构后，超时问题没有出现。能改成hash结构，是因为很多交易所需的字段仅是整个产品信息字段的一小部分。</p>
+<p>但也可能存在数据倾斜的可能，这部分还没去侦查。</p>
+<h3 id="9、unexpected-message-type-DefaultHttpRequest"><a href="#9、unexpected-message-type-DefaultHttpRequest" class="headerlink" title="9、unexpected message type: DefaultHttpRequest"></a>9、unexpected message type: DefaultHttpRequest</h3><p>网关报错信息如下：<code>io.netty.handler.codec.EncoderException: java.lang.IllegalStateException: unexpected message type: DefaultHttpRequest</code>。</p>
+<p>关于该问题，是我这边使用的spring-cloud和spring-boot版本造成的。我这边是更新了为了<code>Greenwich.RELEASE</code>和<code>2.1.0.RELEASE</code>。</p>
+<p>Spring Cloud Gateway 以及 Spring Boot 版本 2.0.1.RELEASE 更新为 2.0.4.RELEASE及后面版本。具体原因查看：<a target="_blank" rel="noopener" href="https://github.com/reactor/reactor-netty/issues/177">issues</a>。</p>
+<p>ateway 以及 Spring Boot 版本 2.0.1.RELEASE 更新为 2.0.4.RELEASE及后面版本。具体原因查看：<a target="_blank" rel="noopener" href="https://github.com/reactor/reactor-netty/issues/177">issues</a>。</p>
+<h3 id="10、SimpleDateFormat线程安全问题"><a href="#10、SimpleDateFormat线程安全问题" class="headerlink" title="10、SimpleDateFormat线程安全问题"></a>10、SimpleDateFormat线程安全问题</h3><p>这边是在压测时候出现的问题：当时报错仅提示：<code>For Input String</code> ‘’。先排查传入日期的字符串是有值的，但并没有清晰报哪一行有误，从而添加错误日志信息打印。</p>
+<p>对于添加堆栈日志信息，可通过arthas的相关命令来添加日志信息打印，以及后续的恢复操作。</p>
+<p>在添加日志信息后，可明确提示是SimpleDateFormat的parseDate()方法报错，该方法在静态方法下调用存在线程安全问题。从而这边的解决方式：将静态方法的校验改为成员方法；当然也可以考虑不使用parseDate()校验日期格式。</p>
 
     
 
@@ -288,7 +320,7 @@
         </li>
         <li>
           <strong>本文链接：</strong>
-          <a href="http://example.com/2022/03/13/hexo使用/" title="练习hexo使用" target="_blank">http://example.com/2022/03/13/hexo使用/</a>
+          <a href="http://example.com/2022/03/16/工作中遇到的bug/" title="工作中遇到的bug" target="_blank">http://example.com/2022/03/16/工作中遇到的bug/</a>
         </li>
         
         <li>
@@ -310,11 +342,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">用于测试图片是否成功的</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">bug</a>
         		</li>
       		
 		</ul>
@@ -370,7 +402,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-     <!-- <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/03/13/hexo%E4%BD%BF%E7%94%A8/" alt="微信分享二维码"> -->
+     <!-- <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/03/16/%E5%B7%A5%E4%BD%9C%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84bug/" alt="微信分享二维码"> -->
     </div>
 </div>
 
@@ -385,15 +417,20 @@
 
 <nav id="article-nav">
   
-    <a href="/2022/03/15/arthas%E7%9A%84%E5%85%A5%E9%97%A8/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2022/03/16/nacos%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          arthas入门
+          nacos集群部署
         
       </div>
     </a>
   
+  
+    <a href="/2022/03/15/arthas%E7%9A%84%E5%85%A5%E9%97%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">arthas入门</div>
+      <i class="icon-circle-right"></i>
+    </a>
   
 </nav>
 
@@ -418,7 +455,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#github%E5%92%8Chexo%E6%95%B4%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">github和hexo整理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#title%E4%B8%8B%E5%A6%82%E4%BD%95%E8%B7%B3%E8%BD%AC%E5%88%B0%E9%A1%B5%E9%9D%A2"><span class="toc-number">2.</span> <span class="toc-text">title下如何跳转到页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%BC%95%E5%85%A5%E5%9B%BE%E7%89%87"><span class="toc-number">3.</span> <span class="toc-text">如何引入图片</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E8%A7%A3%E5%86%B3"><span class="toc-number">4.</span> <span class="toc-text">报错解决</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81SpringBoot%E9%A1%B9%E7%9B%AE%E9%A1%B9%E7%9B%AE%E5%90%AF%E5%8A%A8%E6%97%B6%E5%88%9B%E5%BB%BA%E4%B8%B4%E6%97%B6%E7%9B%AE%E5%BD%95-x2F-tmp%E7%9A%84%E9%9A%90%E8%97%8Fbug"><span class="toc-number">1.</span> <span class="toc-text">1、SpringBoot项目项目启动时创建临时目录&#x2F;tmp的隐藏bug</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1%E3%80%81%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">1.1、前言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2%E3%80%81%E6%AD%A3%E6%96%87"><span class="toc-number">1.2.</span> <span class="toc-text">1.2、正文</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3%E3%80%81%E6%96%87%E7%AB%A0%E5%8F%82%E8%80%83"><span class="toc-number">1.3.</span> <span class="toc-text">1.3、文章参考</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81Spring-Boot-Maven-Plugin%E6%89%93%E5%8C%85%E5%BC%82%E5%B8%B8%E5%8F%8A%E4%B8%89%E7%A7%8D%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95%EF%BC%9AUnable-to-find-main-class"><span class="toc-number">2.</span> <span class="toc-text">2、Spring Boot Maven Plugin打包异常及三种解决方法：Unable to find main class</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1%E3%80%81%E5%89%8D%E8%A8%80"><span class="toc-number">2.1.</span> <span class="toc-text">2.1、前言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2%E3%80%81%E6%AD%A3%E6%96%87"><span class="toc-number">2.2.</span> <span class="toc-text">2.2、正文</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-1%E3%80%81%E8%83%8C%E6%99%AF"><span class="toc-number">2.2.1.</span> <span class="toc-text">2.2.1、背景</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-2%E3%80%81%E9%97%AE%E9%A2%98"><span class="toc-number">2.2.2.</span> <span class="toc-text">2.2.2、问题</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-3%E3%80%81%E8%A7%A3%E5%86%B3"><span class="toc-number">2.2.3.</span> <span class="toc-text">2.2.3、解决</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#2-2-3-1%E3%80%81%E6%96%B9%E6%A1%881"><span class="toc-number">2.2.3.1.</span> <span class="toc-text">2.2.3.1、方案1</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-2-3-2%E3%80%81%E6%96%B9%E6%A1%882"><span class="toc-number">2.2.3.2.</span> <span class="toc-text">2.2.3.2、方案2</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-2-3-2%E3%80%81%E6%96%B9%E6%A1%883"><span class="toc-number">2.2.3.3.</span> <span class="toc-text">2.2.3.2、方案3</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3%E3%80%81%E6%96%87%E7%AB%A0%E5%8F%82%E8%80%83"><span class="toc-number">2.3.</span> <span class="toc-text">2.3、文章参考</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81%E4%BA%A7%E5%93%81%E9%99%90%E5%88%B6%E4%BF%A1%E6%81%AF%E4%BC%98%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text">3、产品限制信息优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%E3%80%81%E7%BD%91%E5%85%B3URL%E8%AF%B7%E6%B1%82%E4%BD%93%E8%A7%A3%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">4、网关URL请求体解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5%E3%80%81oracle%E5%90%AF%E5%8A%A8%E4%B9%8B%E5%90%8E%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8A%E5%8E%BB"><span class="toc-number">5.</span> <span class="toc-text">5、oracle启动之后连接不上去</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6%E3%80%81nginx%E5%92%8C%E7%BD%91%E5%85%B3%E5%AD%98%E5%9C%A8%E5%A4%A7%E9%87%8FTIME-WAIT%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">6、nginx和网关存在大量TIME_WAIT问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7%E3%80%81tps%E9%99%8D%E4%B8%BA%E9%9B%B6%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">7、tps降为零的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8%E3%80%81redis%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98"><span class="toc-number">8.</span> <span class="toc-text">8、redis超时问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9%E3%80%81unexpected-message-type-DefaultHttpRequest"><span class="toc-number">9.</span> <span class="toc-text">9、unexpected message type: DefaultHttpRequest</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10%E3%80%81SimpleDateFormat%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">10.</span> <span class="toc-text">10、SimpleDateFormat线程安全问题</span></a></li></ol>
                     </div>
                 </span>
             </div>
