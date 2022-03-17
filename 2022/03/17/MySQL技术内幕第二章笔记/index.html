@@ -10,16 +10,23 @@
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta property="og:type" content="article">
+  <meta name="description" content="InnoDB是事务安全的MySQL存储引擎，设计上采用类似于Oracle数据库的架构。通常InnoDB存储引擎使OLTP应用中核心表的首选存储引擎。  事务安全：发生事务的情况下，能够满足ACID四大特性。 参考：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;lixiaochi&#x2F;p&#x2F;10591205.html">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Mysql技术内幕第二章笔记">
 <meta property="og:url" content="http://example.com/2022/03/17/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%BA%8C%E7%AB%A0%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="学习笔记搬迁">
+<meta property="og:description" content="InnoDB是事务安全的MySQL存储引擎，设计上采用类似于Oracle数据库的架构。通常InnoDB存储引擎使OLTP应用中核心表的首选存储引擎。  事务安全：发生事务的情况下，能够满足ACID四大特性。 参考：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;lixiaochi&#x2F;p&#x2F;10591205.html">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%BA%8C%E7%AB%A0%E7%AC%94%E8%AE%B0.assets/image-20211025110925460-1635131367502.png">
+<meta property="og:image" content="http://example.com/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%BA%8C%E7%AB%A0%E7%AC%94%E8%AE%B0.assets/image-20211025145311272.png">
+<meta property="og:image" content="http://example.com/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%BA%8C%E7%AB%A0%E7%AC%94%E8%AE%B0.assets/image-20211025203500259.png">
+<meta property="og:image" content="http://example.com/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%BA%8C%E7%AB%A0%E7%AC%94%E8%AE%B0.assets/image-20211025223730600-1635172652738.png">
 <meta property="article:published_time" content="2022-03-17T14:21:47.000Z">
-<meta property="article:modified_time" content="2022-03-17T14:38:24.385Z">
+<meta property="article:modified_time" content="2022-03-17T15:20:27.724Z">
 <meta property="article:author" content="Junode">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%BA%8C%E7%AB%A0%E7%AC%94%E8%AE%B0.assets/image-20211025110925460-1635131367502.png">
   
     <link rel="alternative" href="/atom.xml" title="学习笔记搬迁" type="application/atom+xml">
   
@@ -228,7 +235,7 @@
       <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
       <i class="icon-statistics"></i>
       <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">0字</span>
+      <span class="post-count">5.5k字</span>
     </span>
   </span>
 
@@ -237,7 +244,7 @@
     <span class="post-meta-item-icon">
       <i class="icon-book icon"></i>
       <span class="post-meta-item-text"> 阅读时长≈</span>
-      <span class="post-count">1分</span>
+      <span class="post-count">20分</span>
     </span>
   </span>
 </div>
@@ -248,7 +255,240 @@
   
   <div class="article-entry" itemprop="articleBody">
     
-    
+    <p>InnoDB是事务安全的MySQL存储引擎，设计上采用类似于Oracle数据库的架构。通常InnoDB存储引擎使OLTP应用中核心表的首选存储引擎。</p>
+<blockquote>
+<p>事务安全：发生事务的情况下，能够满足ACID四大特性。</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/lixiaochi/p/10591205.html">https://www.cnblogs.com/lixiaochi/p/10591205.html</a></p>
+</blockquote>
+<span id="more"></span>
+
+<h3 id="2-1-InnoDB存储式引擎概述"><a href="#2-1-InnoDB存储式引擎概述" class="headerlink" title="2.1 InnoDB存储式引擎概述"></a>2.1 InnoDB存储式引擎概述</h3><p>InnoDB第一个完整支持ACID事务的MySQL存储引擎。</p>
+<p>其特点是行锁设计、支持MVCC、支持外键、提供一致性非锁定读、最有效利用和使用内存和CPU；</p>
+<h3 id="2-2-InnoDB存储引擎的版本"><a href="#2-2-InnoDB存储引擎的版本" class="headerlink" title="2.2 InnoDB存储引擎的版本"></a>2.2 InnoDB存储引擎的版本</h3><p>MySQL与InnoDB的版本关系：</p>
+<table>
+<thead>
+<tr>
+<th>MySQL版本</th>
+<th>InnoDB版本</th>
+<th>InnoDB特性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MySQL 5.1前</td>
+<td>老版本InnoDB</td>
+<td>支持ACID，行锁设计，MVCC</td>
+</tr>
+<tr>
+<td>MySQL 5.1</td>
+<td>InnoDB 1.0.x</td>
+<td>继承上述特性，增加compress和dynamic功能</td>
+</tr>
+<tr>
+<td>MySQL 5.5</td>
+<td>InnoDB 1.1.x</td>
+<td>继承上述功能，增加Linux AIO、多段回滚</td>
+</tr>
+<tr>
+<td>MySQL 5.6</td>
+<td>InnoDB 1.2.x</td>
+<td>继承上述功能，增加全文索引支持，在线索引添加</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="2-3-InnoDB体系架构"><a href="#2-3-InnoDB体系架构" class="headerlink" title="2.3 InnoDB体系架构"></a>2.3 InnoDB体系架构</h3><p><img src="/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%BA%8C%E7%AB%A0%E7%AC%94%E8%AE%B0.assets/image-20211025110925460-1635131367502.png" alt="image-20211025110925460"></p>
+<p>InnoDB存储引擎有多个内存块，负责工作如下：</p>
+<ul>
+<li>维护所有进程&#x2F;线程需要访问的多个内部数据结构。</li>
+<li>缓存磁盘上的数据，方便快速的读取，同时在多个磁盘文件的数据修改之前在这里缓存。</li>
+<li>重做日志（redo log）缓冲。</li>
+<li>…</li>
+</ul>
+<p>后台线程的主要作用：</p>
+<ol>
+<li>刷新内存池数据，保证缓冲池中内存缓存的是最近的数据；</li>
+<li>将已修改的数据文件刷新到磁盘文件；</li>
+<li>保证在数据库发生异常时InnoDB能恢复到正常运行状态。</li>
+</ol>
+<blockquote>
+<p>PS：定时任务扫表。和日常开发中使用redis缓存差不多。使用内存保证处理速度，又为了保证数据一致性需要定时同步数据。</p>
+</blockquote>
+<h4 id="2-3-1-后台线程"><a href="#2-3-1-后台线程" class="headerlink" title="2.3.1 后台线程"></a>2.3.1 后台线程</h4><blockquote>
+<p>PS：master线程主要是操作数据脏页缓冲，合并插入，刷新redo日志到磁盘，删除undo页</p>
+</blockquote>
+<p>InnoDB存储引擎是多线程模型，其后台有多个不同的后台线程，负责处理不同的任务。</p>
+<ul>
+<li><p>master thread：负责将缓冲池的数据异步刷新到磁盘，保证数据一致性，包括脏页刷新、合并插入缓冲（insert buffer）、undo页回收等。</p>
+</li>
+<li><p>IO thread：使用AIO处理写IO请求；主要负责IO请求的回调（call back）处理。</p>
+<ul>
+<li><p>在linux平台下，IO thread不能调整。在InnoDB 1.0.x版本开始，read thread和write thread分别增大到4个，使用innodb_read_io_threads和innodb_write_io_threads参数进行设置。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;innodb_version&#x27;</span> \G;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;innodb_%io_threads&#x27;</span> \G;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>purge thread：事务被提交后，其所使用的undolog可能不在需要，因此需要PurgeThrad来回收已经使用被分配的undo页。查看purge thread变量取值：<code>show variables like &#39;innodb_purge_threads&#39; \G</code>。</p>
+</li>
+<li><p>page cleaner thread：将之前版本的脏页刷新操作都放入到单独的线程中来完成，减少master的阻塞。</p>
+</li>
+</ul>
+<h4 id="2-3-2-内存"><a href="#2-3-2-内存" class="headerlink" title="2.3.2 内存"></a>2.3.2 内存</h4><h5 id="1、缓冲池"><a href="#1、缓冲池" class="headerlink" title="1、缓冲池"></a>1、缓冲池</h5><p>InnoDB存储引擎是基于磁盘存储的，并将其中的记录按照页的方式进行管理。</p>
+<p>由于CPU速度与磁盘速度之间的鸿沟，基于磁盘的数据库系统（disk-base database）通常使用缓冲技术来提高数据库的整体性能。</p>
+<p>在数据库中读取页操作，首先将磁盘读到的页放在缓冲池，称为将页FIX在缓冲池。下一次再读取相同的页时，则首先判断是否在缓冲池中。若在缓冲池，则命中读取返回。否则读取磁盘上的页，再缓存到缓冲池，再返回给客户。</p>
+<blockquote>
+<p>问题：缓冲池会满的，淘汰算法：LRU之类的。</p>
+</blockquote>
+<p>对于数据库中页的修改操作，首先修改在缓冲池中的页，在以一定频率刷新到磁盘上。缓冲池刷新到磁盘的操作并不是每次页发生更新时触发，而是通过一种称为CheckPoint的机制刷新回磁盘。</p>
+<p>综上所述，缓冲池大小直接影响着数据库的整体性能。从而为了让数据库使用更多内存，建议数据库服务器采用64位的操作系统。</p>
+<p>对于InnoDB存储引擎，其缓冲池配置通过参数 <code>innodb_buffer_pool_size</code> 来设置。示例：<code>SHOW VARIABLES LIKE &#39;innodb_buffer_pool_size&#39; \G;</code></p>
+<p>缓冲池中缓存的数据页类型：</p>
+<ul>
+<li>索引页</li>
+<li>数据页</li>
+<li>undo页</li>
+<li>插入缓冲（insert buffer)</li>
+<li>自适应哈希索引（adaptive hash index）</li>
+<li>InnoDB存储的锁信息（lock info）</li>
+<li>数据字典信息（data dictionary）</li>
+</ul>
+<p>innoDB内存数据对象</p>
+<p><img src="/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%BA%8C%E7%AB%A0%E7%AC%94%E8%AE%B0.assets/image-20211025145311272.png" alt="image-20211025145311272"></p>
+<p>从InnoDB1.0.x开始，运行设置多个缓冲池实例。每个页根据哈希值平均分配到不同的缓冲池实例中，减少数据库内部的资源竞争，增加数据库的并发处理能力。可以通过设置参数：<code>innodb_buffer_pool_instance</code> 来进行配置，默认值1。</p>
+<p>从MySQL 5.6开始，通过information_schema架构下的表INNODB_BUFFER_POOL_STATS来观察缓冲的状态，如运行下列命令查看各个缓冲池的使用状态：<code>SELECT POOL_ID,POOL_SIZE,FREE_BUFFERS,DATABASE_PAGES FROM INNODB_BUFFER_POOL_STATS \G</code>。</p>
+<h5 id="2、LRU-List、Free-List-和-Flush-List"><a href="#2、LRU-List、Free-List-和-Flush-List" class="headerlink" title="2、LRU List、Free List 和 Flush List"></a>2、LRU List、Free List 和 Flush List</h5><p>InnoDB是如何对缓冲池的各类型的页进行管理呢？</p>
+<p>数据库中的缓冲池是通过LRU（Latest Recent Uesd，最近最少使用）算法来管理的。最频繁使用的页在LRU列表前端，而最少使用的页在LRU列表的尾端。当缓冲池不能存放读取到的页时，首先释放LRU列表中尾端的页。</p>
+<p>而在InnoDB中，对LRU算法进行了优化：将新读取的页存放到LRU列表的midpoint位置，这个算法在InnoDB存储引擎被称为midpoint insertion strategy。midpoint位置可由参数<code>innodb_old_blocks_pct</code>控制，该默认值为37，表示新读取的页插入到LRU列表尾端的37%的位置（差不多3&#x2F;8的位置）。</p>
+<p>把midpoint之后的列表称为old列表，之前的称为new列表，new列表中是最为活跃的数据。</p>
+<blockquote>
+<p>队头是热数据，队尾是冷数据，队中是临时数据，新来的数据往中间放，如果放了一会没有人顶走，那就升级为热数据，挪到队头。</p>
+</blockquote>
+<p>将新查询数据放在中间，那多久将其加入热点数据呢？这是用 <code>innodb_old_blocks_time</code> 控制：表示页读取到mid位置后需要等待多久才会被加入到LRU列表的热端。设置操作：<code>set global innodb_old_blocks_time=1000;</code></p>
+<p>在数据库刚启动时LRU列表是空的，即没有任何的页。此时页都存放在Free列表中。当需要从缓冲池分页时，首先从free列表中查找是否有可用的空闲页，若有则将该也从Free列表中删除，放入LRU列表中。否则，根据LRU算法，淘汰LRU列表末尾的页，将该内存空间分配给新的页。当页从LRU列表的old部分加入到new部分，此时发生的操作为<code>page made young</code>，因为 <code>innodb_old_blocks_time</code> 的设置而导致页没有从old部分移动到new部分的操作称为 <code>page not made young</code>。</p>
+<p>可以通过命令  <code>show engine innodb status</code> 来观察LRU列表及Free列表的使用情况和运行状态。其中有一个重要的观察变量，buffer pool hit rate，表示<strong>缓冲池命中率，通常该值不应小于95%<strong>，若发生buffer pool hit rate值小于95%，用于需要查看</strong>是否存在全表扫描引起LRU列表被污染问题</strong>。</p>
+<p>在InnoDB 1.2之后，可以通过表 <code>innodb_buffer_pool_stats</code>来观察缓冲池的运行状态。</p>
+<p>此外，还可以通过表<code>innodb_buffer_page_lru</code>来观察每个LRU列表中每个页的具体信息。如：<code>select table_name,space,page_number,page_type from innodb_buffer_page_lru where space = 1;</code> </p>
+<p>InnoDB再1.0.x版本开始支持压缩页的功能，LRU中的页包含unzip_lru列表中的页。</p>
+<p><strong>在LRU列表中的页被修改后，称该页为脏页（dirty page）</strong>，即缓冲池中页和磁盘上的页数据不一致。此时数据库会通过checkpoint机制将脏也刷新会磁盘，而flush页列表中的页即为脏页列表。主要注意，脏页即存在URL列表，也存在FLUSH列表中。FLUSH列表通过<code>show engine innodb status</code>来查看，其中modified db pages就是脏页的数量。</p>
+<h5 id="重做日志缓冲"><a href="#重做日志缓冲" class="headerlink" title="重做日志缓冲"></a>重做日志缓冲</h5><p>redo log buffer。</p>
+<p>InnoDB将重做日志信息放入缓冲区，然后按照一定频率将其刷新到重做日志文件。重做日志缓冲一般不需要设置得很大，因为一般情况下每一秒会将重做日志缓冲刷新到日志文件，用户只需要保证每秒产生的事务量在这个缓冲大小之内即可。日志缓冲大小由<code>innodb_log_buffer_size</code>控制，默认为8MB：<code>show variables like &#39;innodb_log_buffer_size \G;&#39;</code>。</p>
+<p>重做日志缓冲落盘条件（满足其中之一）：</p>
+<ul>
+<li>master thread每一秒将重做日志缓冲刷新到 重做日志文件；</li>
+<li>每个事务提交时会将重做日志缓冲刷新到 重做日志文件；</li>
+<li>当重做日志缓冲剩余空间小于1&#x2F;2时，重做日志缓冲刷新到 重做日志文件；</li>
+</ul>
+<h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5><blockquote>
+<p>innodb_additional_mem_pool_size默认8M，当innodb_use_sys_malloc设置on，该参数失效，并且在5.7.5两个参数均移除（因为现在操作系统内存分配器和可伸缩性技术成熟，额外内存的存在已无优势）。</p>
+</blockquote>
+<h3 id="2-4-CheckPoint技术"><a href="#2-4-CheckPoint技术" class="headerlink" title="2.4 CheckPoint技术"></a>2.4 CheckPoint技术</h3><p>脏页数据落盘是在积累一定数据量时候再落盘的，避免开销。</p>
+<p>如果再从缓冲池将页的新版本刷新到磁盘时发生了宕机，那么数据就不能恢复了。为了避免发生数据丢失问题，当前事务数据库系统普遍采用了write ahead log策略，当事务提交时，先写重做日志，再修改页。当发生宕机时即使数据丢失，可以通过重做日志来完成数据恢复，这是事务ACID中D（durability持久性）的要求。</p>
+<p>当出现宕机了，就需要恢复，那如何保持快速恢复呢？就需要CheckPoint技术，CheckPoint技术解决问题如下：</p>
+<ul>
+<li>缩短数据库的恢复时间；</li>
+<li>缓冲池不够用时，将脏页刷新到磁盘；</li>
+<li>重做日志不可用时，刷新脏页。</li>
+</ul>
+<p>在InnoDB存储引擎内部，有两种CheckPoint：</p>
+<ul>
+<li>Sharp CheckPoint</li>
+<li>Fuzzy CheckPoint</li>
+</ul>
+<p>Sharp Checkpoint在数据库关闭时将所有脏页刷新回磁盘，这是默认工作方式：<code>innodb_fast_shutdown = 1</code>。若数据库运行时使用Sharp Checkpoint，则数据库的可用性就受到很大影响。（<strong>why？书本留坑</strong>）</p>
+<p>故InnoDB存储引擎内部使用 Fuzzy CheckPoint进行页刷新，只刷新一部分脏页，而不是刷新所有的脏页回磁盘。</p>
+<p>在InnoDB存储引擎中可能发生几种情况的Fuzzy CheckPoint：</p>
+<ul>
+<li><p>Master Thread Checkpoint：以每秒或每10秒将缓冲池的一定比例的脏页刷回磁盘；</p>
+</li>
+<li><p>FLUSH_LRU_LIST_CheckPoint：LRU列表需保证100个可用空闲页，而LRU列表尾端进行页移除时发觉有脏页，则需进行CheckPoint；</p>
+<ul>
+<li>在InnoDB1.2.x版本后，可通过 <code>innodb_lru_scan_depth</code>参数控制LRU列表可用页数量</li>
+</ul>
+</li>
+<li><p>Async&#x2F;Sync Flush CheckPoint：重做日志不可用时需强制将若干页刷新回磁盘。保证重做日志的循环使用的可用性;</p>
+</li>
+<li><p>Dirty Page too much CheckPoint：脏页数量太多，触发InnoDB存储引擎强制CheckPoint。目的是保证缓冲池有足够可用的页。</p>
+<ul>
+<li>脏页数量的占比由 <code>innodb_max_dirty_pages_pct</code>参数控制，若设置为75，则表示缓冲池中脏页数量占据75%时，则强制进行CheckPoint。</li>
+</ul>
+</li>
+</ul>
+<p>在1.2版本之前 Aysnc Flush Checkoint会阻塞发现问题的用户查询线程，Sync Flush Checkpoint会阻塞所有用户的查询线程，并等待脏页刷新完成。在1.2版本之后即MySQL5.6之后，这部分刷新操作由单独的Page Cleaner Thead完成，故不会阻塞用户查询线程。</p>
+<h3 id="2-5-Master-Thread工作方式"><a href="#2-5-Master-Thread工作方式" class="headerlink" title="2.5 Master Thread工作方式"></a>2.5 Master Thread工作方式</h3><p>具体解释该线程的具体实现及该线程可能存在的问题</p>
+<p>在了解1.x版本之前的Master Thread具体实现后，发觉InnoDB对于IO是有进行限制的，即对IO操作进行限制。而在SSD（固态硬盘）出现后，也就限制了InnoDB存储引擎对于IO的性能，即写入性能（脏页落盘）。</p>
+<h4 id="2-5-1-InnoDB-1-0-x版本之前的Master-Thread"><a href="#2-5-1-InnoDB-1-0-x版本之前的Master-Thread" class="headerlink" title="2.5.1 InnoDB 1.0.x版本之前的Master Thread"></a>2.5.1 InnoDB 1.0.x版本之前的Master Thread</h4><p>不看了，后面需要倒回来补把。</p>
+<h4 id="2-5-2-InnoDB-1-2-x版本之前的Master-Thread"><a href="#2-5-2-InnoDB-1-2-x版本之前的Master-Thread" class="headerlink" title="2.5.2 InnoDB 1.2.x版本之前的Master Thread"></a>2.5.2 InnoDB 1.2.x版本之前的Master Thread</h4><h4 id="2-5-3-InnoDB-1-2-x版本的Master-Thread"><a href="#2-5-3-InnoDB-1-2-x版本的Master-Thread" class="headerlink" title="2.5.3 InnoDB 1.2.x版本的Master Thread"></a>2.5.3 InnoDB 1.2.x版本的Master Thread</h4><h3 id="2-6-InnoDB关键特性"><a href="#2-6-InnoDB关键特性" class="headerlink" title="2.6 InnoDB关键特性"></a>2.6 InnoDB关键特性</h3><ul>
+<li>插入缓冲（Insert Buffer）</li>
+<li>两次写（Double Write）</li>
+<li>自适应哈希索引（Adaptive Hash Index）</li>
+<li>异步IO(Async IO)</li>
+<li>刷新邻接页（Flush Neighbor Page）</li>
+</ul>
+<h4 id="2-6-1-插入缓冲"><a href="#2-6-1-插入缓冲" class="headerlink" title="2.6.1 插入缓冲"></a>2.6.1 插入缓冲</h4><h5 id="2-6-1-1-insert-buffer"><a href="#2-6-1-1-insert-buffer" class="headerlink" title="2.6.1.1 insert buffer"></a>2.6.1.1 insert buffer</h5><p>插入缓冲不是缓冲池的一部分（缓冲池中有Insert Buffer信息），其和数据页一样，是物理页的组成部分。</p>
+<p>在InnoDB存储引擎中，主键是行唯一标识符，通常行记录的插入顺序是按照主键递增的顺序进行插入的。因此插入<strong>聚集索引（primary key）</strong>一般是顺序的，不需要随机读取另一个页中的记录，所以这类插入操作速度是非常快的。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> t (</span><br><span class="line">	a <span class="type">int</span> auto_increment,</span><br><span class="line">    b <span class="type">varchar</span>(<span class="number">30</span>),</span><br><span class="line">    <span class="keyword">primary</span> key(a)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>其中a列是自增长的，若对a列插入NULL值，则由于其具有AUTO_INCREMENT属性，其值会自动增长。同时页中的行记录按a的值进行顺序存放。在一般情况下，不需要随机读取另一个页中的记录。因此，对于这类插入操作，速度是非常快的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">create table t (</span><br><span class="line">	a int auto_increment,</span><br><span class="line">    b varchar(30),</span><br><span class="line">    primary key(a),</span><br><span class="line">    key(b)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>而如一张表不止有一个聚集索引，还有多个非聚集的辅助索引（secondary index）且不是唯一的，此时进行插入操作，数据存放还是按照主键a顺序存放，但对于非聚集索引叶子节点就不再是顺序的，此时就需要离散访问非聚集索引页，从而随机读取的存在而导致插入操作性能下降。</p>
+<p>而Insert Buffer的出现就是为了提高非聚集索引插入的性能。</p>
+<p>Insert Buffer对于非聚集索引的插入或更新操作，不是每一次直接插入到索引页中，而是先判断插入的非聚集索引页是否在缓冲池中，若在，则直接插入；若不再，则先放入到一个Insert Buffer对象中，好似欺骗。然后在以一定频率和情况进行Insert Buffer和辅助索引页子节点的merge（合并）操作，这时通常能将多个插入合并到一个操作中（因为在一个索引页中），这就大大提高了对于非聚集索引插入性能。</p>
+<p>然而Insert Buffer使用需要同时满足以下两个条件：</p>
+<ul>
+<li>索引是辅助索引（secondary index）；</li>
+<li>索引不是唯一（unique）的。</li>
+</ul>
+<p>而Insert Buffer占用的缓冲池内存过大，会对其他操作产生影响，修改 <code>IBUF_POOL_SIZE_PER_MAX_SIZE</code>参数控制插入缓冲的大。</p>
+<h5 id="2-6-1-2-Change-buffer"><a href="#2-6-1-2-Change-buffer" class="headerlink" title="2.6.1.2 Change buffer"></a>2.6.1.2 Change buffer</h5><p>Change buffer包含Insert Buffer的升级，还有Delete buffer、Purge Buffer。</p>
+<p>Change buffer的适用对象：非唯一的辅助索引。</p>
+<p>InnoDB存储引擎提供<code>innodb_change_buffering</code>参数来开启各种Buffer选项，该参数可选值：inserts,deletes,purges,changes,all,none。</p>
+<p>从InnoDB 1.2.X版本开始，可以通过参数innodb_change_buffer_max_size来控制Change Buffer最大使用内存的数量。</p>
+<h5 id="2-6-1-3-insert-buffer的内部实现"><a href="#2-6-1-3-insert-buffer的内部实现" class="headerlink" title="2.6.1.3 insert buffer的内部实现"></a>2.6.1.3 insert buffer的内部实现</h5><p><strong>Insert buffer的使用场景是非唯一辅助索引的插入操作。</strong></p>
+<p>Insert buffer是一个B+树，全局只有一棵 Insert Buffer B+树，负责对所有表的辅助索引进行Insert Buffer。</p>
+<p>该树存放在共享表空间，默认就是idbatal。</p>
+<p>Insert Buffer是一个B+树，从而也有叶子节点和非叶节点组成。非叶节点存放search key。</p>
+<p><img src="/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%BA%8C%E7%AB%A0%E7%AC%94%E8%AE%B0.assets/image-20211025203500259.png" alt="image-20211025203500259"></p>
+<p>search key一共9个字节，space表示插入记录所在的表空间id，每个表对应唯一space id；marker占用一个字节，兼容老版本的Insert Buffer。offset表示页所在的偏移量，占用4个字节。</p>
+<h5 id="2-6-1-4-merge-insert-buffer"><a href="#2-6-1-4-merge-insert-buffer" class="headerlink" title="2.6.1.4 merge insert buffer"></a>2.6.1.4 merge insert buffer</h5><p>Insert&#x2F;Change Buffer是一棵B+树。若需要实现插入记录的辅助索引页不再缓冲池中，那么需要将辅助索引记录首先插入到这棵B+树中。但是iInsert Buffer中的记录何时合并（merge）到真正的辅助索引中呢？</p>
+<p>merge insert buffer可能发生的若干情况：</p>
+<ul>
+<li>辅助索引页被读取到缓冲池时。确认该辅助索引页是否有记录存放于Insert Buffer B+树中。若有，则将insert Buffer B+树中该页的记录插入到该辅助索引页中。可以看到对该页<strong>多次记录操作通过一次操作合并到了原有的辅助索引页</strong>中，因此性能后有大幅提高。</li>
+<li>insert buffer bitmap页追踪到该辅助索引页已无可用空间时；</li>
+<li>master thread</li>
+</ul>
+<h4 id="2-6-2-两次写"><a href="#2-6-2-两次写" class="headerlink" title="2.6.2 两次写"></a>2.6.2 两次写</h4><p>insert buffer给InnoDB存储引擎带来性能提升，doublewrite带给InnoDB的是数据页的可靠性。</p>
+<p>在数据库宕机时，可能InnoDB在写入某个页到表中，这个页只写了一部分之后就发生了宕机，这种情况被称为<strong>部分写失效（partial page write）</strong>，这种情况就是用doublewrite技术解决。</p>
+<p>两次写：在应用（apply）重做日志前，用户需要一个页的副本，当写入失效发生时，先通过页的副本来还原该页，再进行重做，这就是doublewrite，其架构图如下：</p>
+<p><img src="/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%BA%8C%E7%AB%A0%E7%AC%94%E8%AE%B0.assets/image-20211025223730600-1635172652738.png" alt="image-20211025223730600"></p>
+<p>dboulewrite由两部分组成，一部分是内存中的doubulewrite buffer，大小为2MB，另一部分是物理磁盘上共享表空间中连续的128个页，即2个区（extent），大小同样为2MB。在对缓冲池的脏页进行刷新时，并不直接写磁盘，而是会通过memcpy函数将脏页先复制到内存中的doublewrite buffer，之后通过double write buffer再分两次，每次1MB顺序地写入共享表空间的物理磁盘上，然后马上调用fsync函数，同步磁盘，避免缓冲写带来的问题。在这个过程中，因为doublewrite页时连续的，因此这个过程是顺序写的，开销并不是很大。在完成doublewrite页的写入后，再将doublewrite buffer的页写入各个表空间文件中，此时写入则是离散的。</p>
+<p>可以通过以下命令查看doublewrite运行情况：&#96;SHOW GLOBAL STATUS LIKE ‘innodb_dblwr%’ \G;。</p>
+<p>如果操作系统在将页写入磁盘的过程中发生了崩溃，在恢复过程中，InnoDB存储引擎可以从共享表空间中的doublewrite 中找到该页的一个副本，将其赋值到表空间文件，再应用重做日志。</p>
+<h4 id="2-6-3-自适应哈希索引"><a href="#2-6-3-自适应哈希索引" class="headerlink" title="2.6.3 自适应哈希索引"></a>2.6.3 自适应哈希索引</h4><p>哈希（hash），时间复杂度O(1)，B+树查询次数与树高度相关，好像是 O(logn) 吧。</p>
+<p>InnoDB存储引擎会监控对表上各索引页的查询。如果观察到建立哈希索引可以带来速度提升，则建立哈希索引，称之为自适应哈希索引（adaptive hash index,AHI)。</p>
+<p>AHI的优化模式的设计思想是数据库自优化的（self-tuning）。</p>
+<p>通过 <code>SHOW ENGINE INNODB STATUS \G;</code> 命令查看AHI的适用情况。</p>
+<p>默认AHI是开启状态。</p>
+<h4 id="2-6-4-异步IO"><a href="#2-6-4-异步IO" class="headerlink" title="2.6.4 异步IO"></a>2.6.4 异步IO</h4><p>异步IO，asynchronous IO，对应的是同步IO。</p>
+<p>AIO的另一个优势是进行IO Merge操作，多个IO合并为一个IO。</p>
+<p>通过 <code>innodb_use_native_aio</code> 参数控制是否启用native aio。</p>
+<h4 id="2-6-5-刷新邻接页"><a href="#2-6-5-刷新邻接页" class="headerlink" title="2.6.5 刷新邻接页"></a>2.6.5 刷新邻接页</h4><p>flush neighbor page。</p>
+<p>工作原理：当刷新一个脏页时，InnoDB存储引擎会检测该页所在区（extent）的所有页，如果是脏页，那么一起进行刷新。这样做的好处是，通过AIO可以讲多个IO写入操作合并为一个IO操作，故该操作在传统机械硬盘下有着显著优势。但是需要考虑两个问题：</p>
+<ol>
+<li>是不是可能将不怎么脏的页进行了写入，后面该页有很快变脏了？</li>
+<li>固态硬盘有着较高的IOPS，是否还需要这个特性？</li>
+</ol>
+<p>InnoDB存储引擎从1.2.x版本后提供了参数 <code>innodb_flush_neighbors</code>，用于控制是否启用该特性。在传统机械硬盘启用该特性，而固态硬盘有着较高的IOPS，则参数设置为0，即关闭该特性。</p>
+<h3 id="2-7-启动、关闭与恢复"><a href="#2-7-启动、关闭与恢复" class="headerlink" title="2.7 启动、关闭与恢复"></a>2.7 启动、关闭与恢复</h3><p>MySQL实例启动过程中对InnoDB存储引擎的处理过程。</p>
+<p>在关闭时，参数 <code>innodb_fast_shutdown</code>影响着表的存储引擎为InnoDB的行为。该参数取值为0、1、2，默认值为1。</p>
+<ul>
+<li>0表示在mysql数据库关闭时，innodb需要完成所有的full purge 和 merge insert buffer，并且将所有的脏也刷新回磁盘。这需要一些时间，有时甚至需要几个小时来完成。如果再进行InnoDB升级时，需要将这个参数调为0，然后再关闭数据库。</li>
+<li>1是参数innodb_fast_shudown的默认值，表示不需要完成上述的full purge 和 merge insert buffer 操作，但是在缓冲池中的一些数据脏页还是会刷新回磁盘。</li>
+<li>2表示不完成full purge和merge insert buffer操作，也不讲缓冲池中的数据脏页写回磁盘，而是将日志都写入日志文件，但是下次数据库启动时会进行恢复操作（recovery）。</li>
+</ul>
+<p>参数 <code>innodb_force_recovery</code> 影响了整个InnoDB存储引擎的恢复情况。该参数值有0-6。该参数默认值为0，代表当前需要恢复时，进行所以的恢复操作，当不能进行有效恢复时，如数据页发生了corruption，MySQL数据库可能发生宕机（crash），并把错误写入错误日志中去。</p>
+
     
 
     
@@ -384,7 +624,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-InnoDB%E5%AD%98%E5%82%A8%E5%BC%8F%E5%BC%95%E6%93%8E%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">2.1 InnoDB存储式引擎概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E7%9A%84%E7%89%88%E6%9C%AC"><span class="toc-number">2.</span> <span class="toc-text">2.2 InnoDB存储引擎的版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-InnoDB%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">2.3 InnoDB体系架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-1-%E5%90%8E%E5%8F%B0%E7%BA%BF%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">2.3.1 后台线程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-2-%E5%86%85%E5%AD%98"><span class="toc-number">3.2.</span> <span class="toc-text">2.3.2 内存</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1%E3%80%81%E7%BC%93%E5%86%B2%E6%B1%A0"><span class="toc-number">3.2.1.</span> <span class="toc-text">1、缓冲池</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2%E3%80%81LRU-List%E3%80%81Free-List-%E5%92%8C-Flush-List"><span class="toc-number">3.2.2.</span> <span class="toc-text">2、LRU List、Free List 和 Flush List</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97%E7%BC%93%E5%86%B2"><span class="toc-number">3.2.3.</span> <span class="toc-text">重做日志缓冲</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A2%9D%E5%A4%96%E7%9A%84%E5%86%85%E5%AD%98%E6%B1%A0"><span class="toc-number">3.2.4.</span> <span class="toc-text">额外的内存池</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-CheckPoint%E6%8A%80%E6%9C%AF"><span class="toc-number">4.</span> <span class="toc-text">2.4 CheckPoint技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-Master-Thread%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">2.5 Master Thread工作方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-1-InnoDB-1-0-x%E7%89%88%E6%9C%AC%E4%B9%8B%E5%89%8D%E7%9A%84Master-Thread"><span class="toc-number">5.1.</span> <span class="toc-text">2.5.1 InnoDB 1.0.x版本之前的Master Thread</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-2-InnoDB-1-2-x%E7%89%88%E6%9C%AC%E4%B9%8B%E5%89%8D%E7%9A%84Master-Thread"><span class="toc-number">5.2.</span> <span class="toc-text">2.5.2 InnoDB 1.2.x版本之前的Master Thread</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-3-InnoDB-1-2-x%E7%89%88%E6%9C%AC%E7%9A%84Master-Thread"><span class="toc-number">5.3.</span> <span class="toc-text">2.5.3 InnoDB 1.2.x版本的Master Thread</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-InnoDB%E5%85%B3%E9%94%AE%E7%89%B9%E6%80%A7"><span class="toc-number">6.</span> <span class="toc-text">2.6 InnoDB关键特性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6-1-%E6%8F%92%E5%85%A5%E7%BC%93%E5%86%B2"><span class="toc-number">6.1.</span> <span class="toc-text">2.6.1 插入缓冲</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-6-1-1-insert-buffer"><span class="toc-number">6.1.1.</span> <span class="toc-text">2.6.1.1 insert buffer</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-6-1-2-Change-buffer"><span class="toc-number">6.1.2.</span> <span class="toc-text">2.6.1.2 Change buffer</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-6-1-3-insert-buffer%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0"><span class="toc-number">6.1.3.</span> <span class="toc-text">2.6.1.3 insert buffer的内部实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-6-1-4-merge-insert-buffer"><span class="toc-number">6.1.4.</span> <span class="toc-text">2.6.1.4 merge insert buffer</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6-2-%E4%B8%A4%E6%AC%A1%E5%86%99"><span class="toc-number">6.2.</span> <span class="toc-text">2.6.2 两次写</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6-3-%E8%87%AA%E9%80%82%E5%BA%94%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95"><span class="toc-number">6.3.</span> <span class="toc-text">2.6.3 自适应哈希索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6-4-%E5%BC%82%E6%AD%A5IO"><span class="toc-number">6.4.</span> <span class="toc-text">2.6.4 异步IO</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6-5-%E5%88%B7%E6%96%B0%E9%82%BB%E6%8E%A5%E9%A1%B5"><span class="toc-number">6.5.</span> <span class="toc-text">2.6.5 刷新邻接页</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-%E5%90%AF%E5%8A%A8%E3%80%81%E5%85%B3%E9%97%AD%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="toc-number">7.</span> <span class="toc-text">2.7 启动、关闭与恢复</span></a></li></ol>
                     </div>
                 </span>
             </div>
