@@ -6,34 +6,26 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Mysql技术内幕第二章-InnoDB概述 | 学习笔记搬迁</title>
+  <title>G1垃圾回收器日志分析 | 学习笔记搬迁</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="description" content="InnoDB是事务安全的MySQL存储引擎，设计上采用类似于Oracle数据库的架构。通常InnoDB存储引擎使OLTP应用中核心表的首选存储引擎。  事务安全：发生事务的情况下，能够满足ACID四大特性。 参考：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;lixiaochi&#x2F;p&#x2F;10591205.html">
+  <meta name="description" content="本小结主要说明如何配置GC日志参数，以及如何线上分析GC日志。其线程分析工具：https:&#x2F;&#x2F;gceasy.ycrash.cn&#x2F;，也可采用Java自带的分析工具。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mysql技术内幕第二章-InnoDB概述">
-<meta property="og:url" content="http://example.com/2022/03/17/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%BA%8C%E7%AB%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:title" content="G1垃圾回收器日志分析">
+<meta property="og:url" content="http://example.com/2022/03/13/G1%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="学习笔记搬迁">
-<meta property="og:description" content="InnoDB是事务安全的MySQL存储引擎，设计上采用类似于Oracle数据库的架构。通常InnoDB存储引擎使OLTP应用中核心表的首选存储引擎。  事务安全：发生事务的情况下，能够满足ACID四大特性。 参考：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;lixiaochi&#x2F;p&#x2F;10591205.html">
+<meta property="og:description" content="本小结主要说明如何配置GC日志参数，以及如何线上分析GC日志。其线程分析工具：https:&#x2F;&#x2F;gceasy.ycrash.cn&#x2F;，也可采用Java自带的分析工具。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/images/image-20211025110925460-1635131367502.png">
-<meta property="og:image" content="http://example.com/images/image-20220318225301023.png">
-<meta property="og:image" content="http://example.com/images/image-20220318230223958.png">
-<meta property="og:image" content="http://example.com/images/image-20211025145311272.png">
-<meta property="og:image" content="http://example.com/images/image-20220318232717818.png">
-<meta property="og:image" content="http://example.com/images/image-20220319000235218.png">
-<meta property="og:image" content="http://example.com/images/image-20220319000255470.png">
-<meta property="og:image" content="http://example.com/images/image-20220319095215554.png">
-<meta property="og:image" content="http://example.com/images/image-20211025203500259.png">
-<meta property="og:image" content="http://example.com/images/image-20211025223730600-1635172652738.png">
-<meta property="og:image" content="http://example.com/images/image-20220319101111678.png">
-<meta property="article:published_time" content="2022-03-17T14:21:47.000Z">
-<meta property="article:modified_time" content="2022-03-19T02:55:52.444Z">
+<meta property="og:image" content="http://example.com/G1%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90.assets/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xzczQ0NjkzNzA3Mg==,size_16,color_FFFFFF,t_70.jpeg">
+<meta property="article:published_time" content="2022-03-13T14:21:47.000Z">
+<meta property="article:modified_time" content="2022-03-20T08:04:38.344Z">
 <meta property="article:author" content="Junode">
-<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="JVM">
+<meta property="article:tag" content="GC日志">
+<meta property="article:tag" content="gceasy">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/image-20211025110925460-1635131367502.png">
+<meta name="twitter:image" content="http://example.com/G1%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90.assets/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xzczQ0NjkzNzA3Mg==,size_16,color_FFFFFF,t_70.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="学习笔记搬迁" type="application/atom+xml">
   
@@ -214,22 +206,22 @@
               class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-MySQL技术内幕第二章笔记" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-G1垃圾回收器日志分析" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
   
   
     <h1 class="article-title" itemprop="name">
-      Mysql技术内幕第二章-InnoDB概述
+      G1垃圾回收器日志分析
     </h1>
   
 
 
   
   
-<a href="/2022/03/17/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%BA%8C%E7%AB%A0%E7%AC%94%E8%AE%B0/" class="archive-article-date">
-        <time datetime="2022-03-17T14:21:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-17</time>
+<a href="/2022/03/13/G1%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" class="archive-article-date">
+        <time datetime="2022-03-13T14:21:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-13</time>
 </a>
 
   
@@ -242,7 +234,7 @@
       <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
       <i class="icon-statistics"></i>
       <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">5.5k字</span>
+      <span class="post-count">1.9k字</span>
     </span>
   </span>
 
@@ -251,7 +243,7 @@
     <span class="post-meta-item-icon">
       <i class="icon-book icon"></i>
       <span class="post-meta-item-text"> 阅读时长≈</span>
-      <span class="post-count">20分</span>
+      <span class="post-count">9分</span>
     </span>
   </span>
 </div>
@@ -262,244 +254,80 @@
   
   <div class="article-entry" itemprop="articleBody">
     
-    <p>InnoDB是事务安全的MySQL存储引擎，设计上采用类似于Oracle数据库的架构。通常InnoDB存储引擎使OLTP应用中核心表的首选存储引擎。</p>
-<blockquote>
-<p>事务安全：发生事务的情况下，能够满足ACID四大特性。</p>
-<p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/lixiaochi/p/10591205.html">https://www.cnblogs.com/lixiaochi/p/10591205.html</a></p>
-</blockquote>
+    <p>本小结主要说明如何配置GC日志参数，以及如何线上分析GC日志。其线程分析工具：<a target="_blank" rel="noopener" href="https://gceasy.ycrash.cn/%EF%BC%8C%E4%B9%9F%E5%8F%AF%E9%87%87%E7%94%A8Java%E8%87%AA%E5%B8%A6%E7%9A%84%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E3%80%82">https://gceasy.ycrash.cn/，也可采用Java自带的分析工具。</a></p>
 <span id="more"></span>
 
-<h3 id="2-1-InnoDB存储式引擎概述"><a href="#2-1-InnoDB存储式引擎概述" class="headerlink" title="2.1 InnoDB存储式引擎概述"></a>2.1 InnoDB存储式引擎概述</h3><p>InnoDB第一个完整支持ACID事务的MySQL存储引擎。</p>
-<p>其特点是行锁设计、支持MVCC、支持外键、提供一致性非锁定读、最有效利用和使用内存和CPU；</p>
-<h3 id="2-2-InnoDB存储引擎的版本"><a href="#2-2-InnoDB存储引擎的版本" class="headerlink" title="2.2 InnoDB存储引擎的版本"></a>2.2 InnoDB存储引擎的版本</h3><p>MySQL与InnoDB的版本关系：</p>
-<table>
-<thead>
-<tr>
-<th>MySQL版本</th>
-<th>InnoDB版本</th>
-<th>InnoDB特性</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>MySQL 5.1前</td>
-<td>老版本InnoDB</td>
-<td>支持ACID，行锁设计，MVCC</td>
-</tr>
-<tr>
-<td>MySQL 5.1</td>
-<td>InnoDB 1.0.x</td>
-<td>继承上述特性，增加compress和dynamic功能</td>
-</tr>
-<tr>
-<td>MySQL 5.5</td>
-<td>InnoDB 1.1.x</td>
-<td>继承上述功能，增加Linux AIO、多段回滚</td>
-</tr>
-<tr>
-<td>MySQL 5.6</td>
-<td>InnoDB 1.2.x</td>
-<td>继承上述功能，增加全文索引支持，在线索引添加</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody></table>
-<h3 id="2-3-InnoDB体系架构"><a href="#2-3-InnoDB体系架构" class="headerlink" title="2.3 InnoDB体系架构"></a>2.3 InnoDB体系架构</h3><p><img src="/../images/image-20211025110925460-1635131367502.png" alt="image-20211025110925460"></p>
-<p>InnoDB存储引擎有多个内存块，负责工作如下：</p>
-<ul>
-<li>维护所有进程&#x2F;线程需要访问的多个内部数据结构。</li>
-<li>缓存磁盘上的数据，方便快速的读取，同时在多个磁盘文件的数据修改之前在这里缓存。</li>
-<li>重做日志（redo log）缓冲。</li>
-<li>…</li>
-</ul>
-<p>后台线程的主要作用：</p>
-<ol>
-<li>刷新内存池数据，保证缓冲池中内存缓存的是最近的数据；</li>
-<li>将已修改的数据文件刷新到磁盘文件；</li>
-<li>保证在数据库发生异常时InnoDB能恢复到正常运行状态。</li>
-</ol>
-<blockquote>
-<p>PS：定时任务扫表。和日常开发中使用redis缓存差不多。使用内存保证处理速度，又为了保证数据一致性需要定时同步数据。</p>
-</blockquote>
-<h4 id="2-3-1-后台线程"><a href="#2-3-1-后台线程" class="headerlink" title="2.3.1 后台线程"></a>2.3.1 后台线程</h4><p>InnoDB存储引擎是多线程模型，其后台有多个不同的后台线程，负责处理不同的任务。</p>
-<ul>
-<li><p>master thread：负责将缓冲池的数据异步刷新到磁盘，保证数据一致性，包括脏页刷新、合并插入缓冲（insert buffer）、定时刷新redo页落盘、undo页回收等。</p>
-</li>
-<li><p>IO thread：使用AIO处理写IO请求；主要负责IO请求的回调（call back）处理。</p>
-<ul>
-<li><p>在linux平台下，IO thread不能调整。在InnoDB 1.0.x版本开始，read thread和write thread分别增大到4个，使用innodb_read_io_threads和innodb_write_io_threads参数进行设置。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;innodb_version&#x27;</span> \G;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SHOW</span> VARIABLES <span class="keyword">LIKE</span> <span class="string">&#x27;innodb_%io_threads&#x27;</span> \G;</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li><p>purge thread：事务被提交后，PurgeThrad回收已经使用的但后意义的undo页（好像是LSN标记？书本后续有介绍的哈&gt;_&lt;）。查看purge thread变量取值：<code>show variables like &#39;innodb_purge_threads&#39; \G</code>。</p>
-</li>
-<li><p>page cleaner thread：将之前版本的脏页刷新操作放到单独的线程完成，减少master的阻塞。</p>
-</li>
-</ul>
-<h4 id="2-3-2-内存"><a href="#2-3-2-内存" class="headerlink" title="2.3.2 内存"></a>2.3.2 内存</h4><h5 id="1、缓冲池"><a href="#1、缓冲池" class="headerlink" title="1、缓冲池"></a>1、缓冲池</h5><p>InnoDB存储引擎是基于磁盘存储的，并将其中的记录按照页的方式进行管理。</p>
-<p>由于CPU速度与磁盘速度差异，基于磁盘的数据库系统（disk-base database）通常使用缓冲技术来提高数据库的整体性能。</p>
-<p>在数据库中读取页操作，首先将磁盘读到的页放在缓冲池，称为将页FIX在缓冲池。下一次再读取相同的页时，则首先判断是否在缓冲池中。若在缓冲池，则命中读取返回，否则读取磁盘上的页，先缓存到缓冲池，再返回给客户。</p>
-<blockquote>
-<p>个人理解模糊说明，很可能不准确：free list,lru list,flush list。在mysql启动时，buffer pool仅有free list；客户请求过来，发觉lru list为空，则走磁盘查数据，从free list拿出一页存数据放到lru list；当lru list达到空闲页阈值时（变量控制），就会进行落盘操作，此时落盘操作不是master thread执行的吧？落盘时是以页的形式落盘，则可能存在部分落盘失败，即部分写失败，从而出现了double write保证在部分写失败时保证原子性。flush list应该由page cleaner thread完成的刷新操作。</p>
-</blockquote>
-<p><img src="/../images/image-20220318225301023.png" alt="image-20220318225301023"></p>
-<p>对于数据库中页的修改，先修改在缓冲池中的页，再通过CheckPoint的机制将修改页刷新回磁盘。</p>
-<p><img src="/../images/image-20220318230223958.png" alt="image-20220318230223958"></p>
-<p>综上所述，缓冲池大小直接影响着数据库的整体性能。为了让数据库使用更多内存，建议<strong>数据库服务器采用64位的操作系统</strong>。</p>
-<blockquote>
-<p>数据库服务器要采用独立的服务器部署（源于《操作系统原理》），不与其他应用混合部署，最主要是保证数据库服务器磁盘的整块连续性，避免分散存储。原因忘了。</p>
-</blockquote>
-<p>缓冲池大小配置： <code>innodb_buffer_pool_size</code> 来设置。</p>
-<p>缓冲池中缓存的数据页类型：</p>
-<ul>
-<li>索引页</li>
-<li>数据页</li>
-<li>undo页</li>
-<li>插入缓冲（insert buffer)</li>
-<li>自适应哈希索引（adaptive hash index）</li>
-<li>InnoDB存储的锁信息（lock info）</li>
-<li>数据字典信息（data dictionary）</li>
-</ul>
-<p>innoDB内存数据对象</p>
-<p><img src="/../images/image-20211025145311272.png" alt="image-20211025145311272"></p>
-<p>从InnoDB1.0.x开始，<strong>可设置多个缓冲池实例，innodb_buffer_pool_instance&#96; ，默认值1。</strong> 每个页根据哈希值平均分配到不同的缓冲池实例中，减少数据库内部的资源竞争，增加数据库的并发处理能力.</p>
-<p>从MySQL 5.6开始，通过<code>information_schema</code>架构下的表INNODB_BUFFER_POOL_STATS来观察缓冲的状态。</p>
-<p>如运行下列命令查看各个缓冲池的使用状态：<code>SELECT POOL_ID,POOL_SIZE,FREE_BUFFERS,DATABASE_PAGES FROM INNODB_BUFFER_POOL_STATS \G</code>。</p>
-<h5 id="2、LRU-List、Free-List-和-Flush-List"><a href="#2、LRU-List、Free-List-和-Flush-List" class="headerlink" title="2、LRU List、Free List 和 Flush List"></a>2、LRU List、Free List 和 Flush List</h5><p>InnoDB是如何对缓冲池的各类型的页进行管理呢？</p>
-<p>数据库中的缓冲池是通过LRU（Latest Recent Uesd，最近最少使用）算法来管理的。最频繁使用的页在LRU列表前端，而最少使用的页在LRU列表的尾端。当缓冲池不能存放读取到的页时，首先释放LRU列表中尾端的页。</p>
-<p>而在InnoDB中，对LRU算法进行了优化：将新读取的页存放到LRU列表的midpoint位置，称为midpoint insertion strategy，由参数<code>innodb_old_blocks_pct</code>控制，默认值37，表示新读取的页插入到LRU列表尾端的37%的位置（差不多3&#x2F;8的位置）。</p>
-<p><img src="/../images/image-20220318232717818.png" alt="image-20220318232717818"></p>
-<p>把midpoint之后的列表称为old列表，之前的称为new列表，new列表中是最为活跃的数据。</p>
-<blockquote>
-<p>队头是热数据，队尾是冷数据，队中是临时数据，新来的数据往中间放，如果放了一会没有人顶走，那就升级为热数据，挪到队头。<strong>采用 <code>innodb_old_blocks_time</code> 控制：表示页读取到mid位置后需要等待多久才会被加入到LRU列表的热端。</strong></p>
-<p><strong>innodb 改进原LRU列表，是为了防止innodb查询的预读机制将原热点数据刷没了。</strong></p>
-<p><img src="/../images/image-20220319000235218.png" alt="image-20220319000235218"></p>
-<p><img src="/../images/image-20220319000255470.png" alt="image-20220319000255470"></p>
-</blockquote>
-<p>在数据库刚启动时LRU列表是空的，即没有任何的页。此时页都存放在Free列表中。当需要从缓冲池分页时，首先从free列表中查找是否有可用的空闲页，若有则将该也从Free列表中删除，放入LRU列表中。否则，根据LRU算法，淘汰LRU列表末尾的页，将该内存空间分配给新的页。当页从LRU列表的old部分加入到new部分，此时发生的操作为<code>page made young</code>，因为 <code>innodb_old_blocks_time</code> 的设置而导致页没有从old部分移动到new部分的操作称为 <code>page not made young</code>。</p>
-<p>可以通过命令  <code>show engine innodb status</code> 来观察LRU列表及Free列表的使用情况和运行状态。其中有一个重要的观察变量，<strong>buffer pool hit rate</strong>，表示<strong>缓冲池命中率，通常该值不应小于95%<strong>，若发生buffer pool hit rate值小于95%，用于需要查看</strong>是否存在全表扫描引起LRU列表被污染问题</strong>。</p>
-<p>在InnoDB 1.2之后，<strong>表 <code>innodb_buffer_pool_stats</code>可观察缓冲池的运行状态。</strong></p>
-<p>此外，还可以通过表<code>innodb_buffer_page_lru</code>来观察每个LRU列表中每个页的具体信息。如：<code>select table_name,space,page_number,page_type from innodb_buffer_page_lru where space = 1;</code> </p>
-<p>InnoDB再1.0.x版本开始支持压缩页的功能，LRU中的页包含unzip_lru列表中的页。</p>
-<p><strong>在LRU列表中的页被修改后，称该页为脏页（dirty page）</strong>，即缓冲池中页和磁盘上的页数据不一致。此时数据库会通过checkpoint机制将脏也刷新会磁盘，而flush页列表中的页即为脏页列表。主要注意，脏页即存在URL列表，也存在FLUSH列表中。FLUSH列表通过<code>show engine innodb status</code>来查看，其中modified db pages就是脏页的数量。</p>
-<h5 id="重做日志缓冲"><a href="#重做日志缓冲" class="headerlink" title="重做日志缓冲"></a>重做日志缓冲</h5><p>redo log buffer。</p>
-<p>InnoDB将重做日志信息放入缓冲区，然后按照一定频率将其刷新到重做日志文件。重做日志缓冲一般不需要设置得很大，因为一般情况下每一秒会将重做日志缓冲刷新到日志文件，用户只需要保证每秒产生的事务量在这个缓冲大小之内即可。日志缓冲大小由<code>innodb_log_buffer_size</code>控制，默认为8MB：<code>show variables like &#39;innodb_log_buffer_size \G;&#39;</code>。</p>
-<p>重做日志缓冲落盘条件（满足其中之一）：</p>
-<ul>
-<li>master thread每一秒将重做日志缓冲刷新到 重做日志文件；</li>
-<li>每个事务提交时会将重做日志缓冲刷新到 重做日志文件；</li>
-<li>当重做日志缓冲剩余空间小于1&#x2F;2时，重做日志缓冲刷新到 重做日志文件；</li>
-</ul>
-<h5 id="额外的内存池"><a href="#额外的内存池" class="headerlink" title="额外的内存池"></a>额外的内存池</h5><blockquote>
-<p>innodb_additional_mem_pool_size默认8M，当innodb_use_sys_malloc设置on，该参数失效，并且在5.7.5两个参数均移除（因为现在操作系统内存分配器和可伸缩性技术成熟，额外内存的存在已无优势）。</p>
-</blockquote>
-<h3 id="2-4-CheckPoint技术"><a href="#2-4-CheckPoint技术" class="headerlink" title="2.4 CheckPoint技术"></a>2.4 CheckPoint技术</h3><p>脏页数据落盘是在积累一定数据量时候再落盘的，避免开销。</p>
-<p>通过采用<strong>write ahead log策略</strong>实现在缓冲池将页刷新到磁盘时发生了宕机，当事务提交时，先写重做日志，再修改页。<strong>当发生宕机时即使数据丢失，可以通过重做日志来完成数据恢复</strong>，这是<strong>事务ACID中D（durability持久性）的要求</strong>。</p>
-<p>宕机时如何保持快速恢复？CheckPoint技术，其解决问题如下：</p>
-<ul>
-<li>缩短数据库的恢复时间；</li>
-<li>缓冲池不够用时，将脏页刷新到磁盘；</li>
-<li>重做日志不可用时，刷新脏页。</li>
-</ul>
-<p>有两种CheckPoint机制：</p>
-<ul>
-<li>Sharp CheckPoint</li>
-<li>Fuzzy CheckPoint</li>
-</ul>
-<p>Sharp Checkpoint在数据库关闭时将所有脏页刷新回磁盘，这是默认工作方式：<code>innodb_fast_shutdown = 1</code>。若数据库运行时使用Sharp Checkpoint，则数据库的可用性就受到很大影响。<strong>通过使用 Fuzzy CheckPoint进行页刷新，只刷新一部分脏页，而不是刷新所有的脏页回磁盘。</strong></p>
-<p>以下几种情况发生Fuzzy CheckPoint：</p>
-<ul>
-<li><p>Master Thread Checkpoint：以每秒或每10秒将缓冲池的一定比例的脏页刷回磁盘；</p>
-</li>
-<li><p><strong>FLUSH_LRU_LIST_CheckPoint：LRU列表需保证100个可用空闲页，而LRU列表尾端进行页移除时发觉有脏页，则需进行CheckPoint；</strong></p>
-</li>
-<li><p>在InnoDB1.2.x版本后，可通过 <code>innodb_lru_scan_depth</code>参数控制LRU列表可用页数量</p>
-</li>
-<li><p>Async&#x2F;Sync Flush CheckPoint：重做日志不可用时需强制将若干页刷新回磁盘。保证重做日志的循环使用的可用性;</p>
-</li>
-<li><p>Dirty Page too much CheckPoint：脏页数量太多，触发InnoDB存储引擎强制CheckPoint。目的是保证缓冲池有足够可用的页。</p>
-<ul>
-<li>脏页数量的占比由 <code>innodb_max_dirty_pages_pct</code>参数控制，若设置为75，则表示缓冲池中脏页数量占据75%时，则强制进行CheckPoint。</li>
-</ul>
-</li>
-</ul>
-<p>在1.2版本之前 Aysnc Flush Checkoint会阻塞发现问题的用户查询线程，Sync Flush Checkpoint会阻塞所有用户的查询线程，并等待脏页刷新完成。在1.2版本之后即MySQL5.6之后，这部分刷新操作由单独的Page Cleaner Thead完成，故不会阻塞用户查询线程。</p>
-<h3 id="2-5-Master-Thread工作方式"><a href="#2-5-Master-Thread工作方式" class="headerlink" title="2.5 Master Thread工作方式"></a>2.5 Master Thread工作方式</h3><p>具体解释该线程的具体实现及该线程可能存在的问题</p>
-<p>在了解1.x版本之前的Master Thread具体实现后，发觉InnoDB对IO操作进行限制。而在SSD（固态硬盘）出现后，也就限制了InnoDB存储引擎对于IO的性能，即写入性能（脏页落盘）。</p>
-<h4 id="2-5-1-InnoDB-1-0-x版本之前的Master-Thread"><a href="#2-5-1-InnoDB-1-0-x版本之前的Master-Thread" class="headerlink" title="2.5.1 InnoDB 1.0.x版本之前的Master Thread"></a>2.5.1 InnoDB 1.0.x版本之前的Master Thread</h4><p>不看了，后面需要倒回来补把。</p>
-<h4 id="2-5-2-InnoDB-1-2-x版本之前的Master-Thread"><a href="#2-5-2-InnoDB-1-2-x版本之前的Master-Thread" class="headerlink" title="2.5.2 InnoDB 1.2.x版本之前的Master Thread"></a>2.5.2 InnoDB 1.2.x版本之前的Master Thread</h4><h4 id="2-5-3-InnoDB-1-2-x版本的Master-Thread"><a href="#2-5-3-InnoDB-1-2-x版本的Master-Thread" class="headerlink" title="2.5.3 InnoDB 1.2.x版本的Master Thread"></a>2.5.3 InnoDB 1.2.x版本的Master Thread</h4><p>从主线程分离一个单独的page cleaner thread，负责dirty page刷新，减轻master thread的工作。</p>
-<h3 id="2-6-InnoDB关键特性"><a href="#2-6-InnoDB关键特性" class="headerlink" title="2.6 InnoDB关键特性"></a>2.6 InnoDB关键特性</h3><ul>
-<li>插入缓冲（Insert Buffer）、两次写（Double Write）、自适应哈希索引（Adaptive Hash Index）、异步IO(Async IO)、刷新邻接页（Flush Neighbor Page）</li>
-</ul>
-<h4 id="2-6-1-插入缓冲"><a href="#2-6-1-插入缓冲" class="headerlink" title="2.6.1 插入缓冲"></a>2.6.1 插入缓冲</h4><h5 id="2-6-1-1-insert-buffer"><a href="#2-6-1-1-insert-buffer" class="headerlink" title="2.6.1.1 insert buffer"></a>2.6.1.1 insert buffer</h5><p>插入缓冲不是缓冲池的一部分（缓冲池中有Insert Buffer信息），其和数据页一样，是物理页的组成部分。</p>
-<p>在InnoDB存储引擎中，主键是行唯一标识符，通常行记录的插入顺序是按照主键递增的顺序进行插入的。</p>
-<p>因此插入<strong>聚集索引（primary key）</strong>一般是顺序的，不需要随机读取另一个页中的记录，所以这类插入操作速度是非常快的。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> t (</span><br><span class="line">	a <span class="type">int</span> auto_increment,</span><br><span class="line">    b <span class="type">varchar</span>(<span class="number">30</span>),</span><br><span class="line">    <span class="keyword">primary</span> key(a)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>一般我们在项目中添加的JVM的参数配置如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-XX:NewSize=5242880 -XX:MaxNewSize=5242880 -XX:InitialHeapSize=10485760 -</span><br><span class="line">XX:MaxHeapSize=10485760 -XX:SurvivorRatio=8 -XX:PretenureSizeThreshold=10485760 -</span><br><span class="line">XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -</span><br><span class="line">Xloggc:gc.log</span><br></pre></td></tr></table></figure>
 
-<p>其中a列是自增长的，若对a列插入NULL值，则由于其具有AUTO_INCREMENT属性，其值会自动增长。同时页中的行记录按a的值进行顺序存放。在一般情况下，不需要随机读取另一个页中的记录。因此，对于这类插入操作，速度是非常快的。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">create table t (</span><br><span class="line">	a int auto_increment,</span><br><span class="line">    b varchar(30),</span><br><span class="line">    primary key(a),</span><br><span class="line">    key(b)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<p>除了聚集索引，数据表还有非聚集的辅助索引（secondary index）。非聚集索引叶子结点的插入不再是顺序的，这是因为b+树的特性决定了非聚集索引插入的离散性。</p>
-<p>而Insert Buffer的出现就是为了提高非聚集索引插入的性能。</p>
-<p>Insert Buffer对于非聚集索引的插入或更新操作，不是每一次直接插入到索引页中，而是先判断插入的非聚集索引页是否在缓冲池中，若在，则直接插入；若不再，则先放入到一个Insert Buffer对象中，好似欺骗。然后在以一定频率和情况进行Insert Buffer和辅助索引页子节点的merge（合并）操作，这时通常能将<strong>多个插入合并到一个操作中</strong>（因为在一个索引页中），这就大大提高了对于非聚集索引插入性能。</p>
-<p><img src="/../images/image-20220319095215554.png" alt="image-20220319095215554"></p>
-<p>Insert Buffer启需要同时满足以下两个条件：</p>
-<ul>
-<li>索引是辅助索引（secondary index）；</li>
-<li>索引不是唯一（unique）的。</li>
-</ul>
-<p>Change buffer包含Insert Buffer的升级，还有Delete buffer、Purge Buffer。</p>
-<p>Change buffer的适用对象：非唯一的辅助索引。因为插入缓冲时，数据库并不差找索引页来判断插入记录的唯一性。若去查找，则又有离散读情况，降低insert buffer性能。</p>
-<blockquote>
-<p>总结：索引不是唯一的，不然insert buffer大部分时间用于判断插入记录是否是唯一，此时存在离散读，降低insert buffer性能。</p>
-</blockquote>
-<p>缺点：若db宕机了，则有大量insert buffer合并到非聚集索引，此时恢复耗时较长。具体优化控制，即调整insert buffer大小，具体看书中参数。</p>
-<h5 id="2-6-1-3-insert-buffer的内部实现"><a href="#2-6-1-3-insert-buffer的内部实现" class="headerlink" title="2.6.1.3 insert buffer的内部实现"></a>2.6.1.3 insert buffer的内部实现</h5><p><strong>Insert buffer的使用场景是非唯一辅助索引的插入操作。</strong></p>
-<p>Insert buffer是一个B+树，全局只有一棵 Insert Buffer B+树，负责对所有表的辅助索引进行Insert Buffer。</p>
-<p>该树存放在共享表空间，默认就是idbatal。</p>
-<p>Insert Buffer是一个B+树，从而也有叶子节点和非叶节点组成。非叶节点存放search key。</p>
-<p><img src="/../images/image-20211025203500259.png" alt="image-20211025203500259"></p>
-<p>search key一共9个字节，space表示插入记录所在的表空间id，每个表对应唯一space id；marker占用一个字节，兼容老版本的Insert Buffer。offset表示页所在的偏移量，占用4个字节。</p>
-<h5 id="2-6-1-4-merge-insert-buffer"><a href="#2-6-1-4-merge-insert-buffer" class="headerlink" title="2.6.1.4 merge insert buffer"></a>2.6.1.4 merge insert buffer</h5><p>Insert&#x2F;Change Buffer是一棵B+树。若需要实现插入记录的辅助索引页不再缓冲池中，需要将辅助索引记录首先插入到这棵B+树中。但是Insert Buffer中的记录何时合并（merge）到真正的辅助索引中呢？</p>
-<p>merge insert buffer可能发生的若干情况：</p>
-<ul>
-<li>辅助索引页被读取到缓冲池时。确认该辅助索引页是否有记录存放于Insert Buffer B+树中。若有，则将insert Buffer B+树中该页的记录插入到该辅助索引页中。可以看到对该页<strong>多次记录操作通过一次操作合并到了原有的辅助索引页</strong>中，因此性能后有大幅提高。</li>
-<li>insert buffer bitmap页追踪到该辅助索引页已无可用空间时；</li>
-<li>master thread</li>
-</ul>
-<h4 id="2-6-2-两次写"><a href="#2-6-2-两次写" class="headerlink" title="2.6.2 两次写"></a>2.6.2 两次写</h4><p><strong>insert buffer给InnoDB存储引擎带来性能提升，doublewrite带给InnoDB的是数据页的可靠性。</strong></p>
-<p>在数据库宕机时，可能InnoDB在写入某个页到表中，这个页只写了一部分之后就发生了宕机，这种情况被称为<strong>部分写失效（partial page write）</strong>，这种情况就是用doublewrite技术解决。</p>
-<p>两次写：在应用（apply）重做日志前，用户需要一个页的副本，当写入失效发生时，先通过页的副本来还原该页，再进行重做，这就是doublewrite，其架构图如下：</p>
-<p><img src="/../images/image-20211025223730600-1635172652738.png" alt="image-20211025223730600"></p>
-<p>dboulewrite由两部分组成，一部分是内存中的doubulewrite buffer，大小为2MB，另一部分是物理磁盘上共享表空间中连续的128个页，即2个区（extent），大小同样为2MB。在对<strong>缓冲池的脏页刷新</strong>时，并不直接写磁盘，而是会通过memcpy函数将脏页<strong>先复制到内存中的doublewrite buffer</strong>，之后<strong>通过double write buffer再分两次，每次1MB顺序地写入共享表空间的物理磁盘上，然后马上调用fsync函数，同步磁盘</strong>，避免缓冲写带来的问题。在这个过程中，<strong>因为doublewrite页时连续的，因此这个过程是顺序写的，开销并不是很大。</strong>在完成doublewrite页的写入后，再将doublewrite buffer的页写入各个表空间文件中，此时写入则是离散的。</p>
-<p>可以通过以下命令查看doublewrite运行情况：&#96;SHOW GLOBAL STATUS LIKE ‘innodb_dblwr%’ \G;。</p>
-<p>如果操作系统在将页写入磁盘的过程中发生了崩溃，<strong>在恢复过程中，InnoDB存储引擎可以从共享表空间中的doublewrite 中找到该页的一个副本，将其赋值到表空间文件，再应用重做日志</strong>。</p>
-<p><img src="/../images/image-20220319101111678.png" alt="image-20220319101111678"></p>
-<h4 id="2-6-3-自适应哈希索引"><a href="#2-6-3-自适应哈希索引" class="headerlink" title="2.6.3 自适应哈希索引"></a>2.6.3 自适应哈希索引</h4><p>哈希（hash），时间复杂度O(1)，B+树查询次数取决于b+树的高度。</p>
-<p>InnoDB存储引擎会监控对表上各索引页的查询。如果观察到建立哈希索引可以带来速度提升，则建立哈希索引，称之为自适应哈希索引（adaptive hash index,AHI)。默认AHI是开启状态。</p>
-<p><strong>AHI的优化模式的设计思想是数据库自优化的（self-tuning）。</strong></p>
-<p>通过 <code>SHOW ENGINE INNODB STATUS \G;</code> 命令查看AHI的适用情况。</p>
-<h4 id="2-6-4-异步IO"><a href="#2-6-4-异步IO" class="headerlink" title="2.6.4 异步IO"></a>2.6.4 异步IO</h4><p>异步IO，asynchronous IO，对应的是同步IO。</p>
-<p>AIO的另一个优势是进行IO Merge操作，多个IO合并为一个IO，提高IOPS性能。如客户访问页的(spage_id,page_no)为：(8,6),(8,7),(8,8)，可简化为发送一个IO请求，从（8,6）开发返回48kb的页。</p>
-<p>通过 <code>innodb_use_native_aio</code> 参数控制是否启用native aio。</p>
-<h4 id="2-6-5-刷新邻接页"><a href="#2-6-5-刷新邻接页" class="headerlink" title="2.6.5 刷新邻接页"></a>2.6.5 刷新邻接页</h4><p>flush neighbor page。</p>
-<p>工作原理：当刷新一个脏页时，InnoDB存储引擎会检测该页所在区（extent）的所有页，如果是脏页，那么一起进行刷新。</p>
-<p>好处是通过AIO可以讲多个IO写入操作合并为一个IO操作，故该操作在传统机械硬盘下有着显著优势。</p>
-<p>但是需要考虑两个问题：</p>
+<p>参数说明：</p>
 <ol>
-<li>是不是可能将不怎么脏的页进行了写入，后面该页有很快变脏了？</li>
-<li>固态硬盘有着较高的IOPS，是否还需要这个特性？</li>
+<li>-XX:NewSize：新生代的初始内存大小；</li>
+<li>-XX:MaxNewSize：新生代的最大内存；</li>
+<li>-XX:InitialHeapSize：堆内存的初始大小；</li>
+<li>-XX:MaxHeapSize：最大堆内存；</li>
+<li>-XX:SurvivorRatio：新生代比例；</li>
+<li>-XX:PretenureSizeThreshold：大对象阈值，超过该阈值的对象直接进老年代；</li>
+<li>-XX:+UseParNewGC：新生代采用ParNew垃圾收集器；</li>
+<li>-XX:+UseConcMarkSweepGC：老年代采用CMS垃圾收集器；</li>
+<li>-XX:+PrintGCDetails：打印GC日志的详细信息；</li>
+<li>-XX:+PrintGCTimeStamps：打印每次GC发生的时间；</li>
+<li>-Xloggc:gc.log：GC日志的存放路径及文件名称。</li>
 </ol>
-<p>InnoDB存储引擎从1.2.x版本后提供了参数 <code>innodb_flush_neighbors</code>，用于控制是否启用该特性。在传统机械硬盘启用该特性，而固态硬盘有着较高的IOPS，则参数设置为0，即关闭该特性。</p>
-<h3 id="2-7-启动、关闭与恢复"><a href="#2-7-启动、关闭与恢复" class="headerlink" title="2.7 启动、关闭与恢复"></a>2.7 启动、关闭与恢复</h3><p>在关闭时，参数 <code>innodb_fast_shutdown</code>影响着表的存储引擎InnoDB的行为。该参数取值为0、1、2，默认值为1。</p>
-<ul>
-<li>0表示在mysql数据库关闭时，innodb需要完成所有的full purge 和 merge insert buffer，并且将所有的脏也刷新回磁盘。这需要一些时间，有时甚至需要几个小时来完成。如果再<strong>进行InnoDB升级时，需要将这个参数调为0，然后再关闭数据库。</strong></li>
-<li>1表示不需要完成full purge 和 merge insert buffer 操作，但是在缓冲池中的一些数据脏页还是会刷新回磁盘。</li>
-<li>2表示不完成full purge和merge insert buffer操作，也不将缓冲池中的数据脏页写回磁盘，而是将日志都写入日志文件，下次数据库启动时会进行恢复操作（recovery）。</li>
-</ul>
-<p>参数 <code>innodb_force_recovery</code> 影响了整个InnoDB存储引擎的恢复情况。该参数值有0-6。该参数默认值为0，代表当前需要恢复时，进行所以的恢复操作，当不能进行有效恢复时，如数据页发生了corruption，MySQL数据库可能发生宕机（crash），并把错误写入错误日志中去。</p>
+<p>在设置好参数，以及启动好项目后，我们代码跑一段时间后，会生成GC日志，信息如下：</p>
+<hr>
+<p>OpenJDK 64-Bit Server VM (25.181-b13) for linux-amd64 JRE (1.8.0_181-b13), built on Jul 16 2018 11:13:18 by “mockbuild” with gcc 4.8.5 20150623 (Red Hat 4.8.5-36)<br>Memory: 4k page, physical 32937476k(25309772k free), swap 6291452k(6291452k free)<br>CommandLine flags: -XX:CompressedClassSpaceSize&#x3D;528482304 -XX:ErrorFile&#x3D;&#x2F;home&#x2F;junode&#x2F;code&#x2F;dddcenter&#x2F;logs&#x2F;jvm&#x2F;&#x2F;hs_err_pid%p.log -XX:GCLogFileSize&#x3D;52428800 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath&#x3D;&#x2F;home&#x2F;junode&#x2F;code&#x2F;dddcenter&#x2F;logs&#x2F;jvm&#x2F; -XX:InitialHeapSize&#x3D;4294967296 -XX:MaxGCPauseMillis&#x3D;100 -XX:MaxHeapSize&#x3D;4294967296 -XX:MaxMetaspaceSize&#x3D;536870912 -XX:MaxNewSize&#x3D;3221225472 -XX:MetaspaceSize&#x3D;536870912 -XX:NewSize&#x3D;3221225472 -XX:NumberOfGCLogFiles&#x3D;10 -XX:+ParallelRefProcEnabled -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio&#x3D;8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseG1GC<br>2022-03-10T11:57:40.423+0800: 12.062: [GC pause (G1 Evacuation Pause) (young), 0.0914849 secs]<br>   [Parallel Time: 72.8 ms, GC Workers: 8]<br>      [GC Worker Start (ms): Min: 12063.1, Avg: 12066.0, Max: 12072.9, Diff: 9.8]<br>      [Ext Root Scanning (ms): Min: 0.0, Avg: 3.2, Max: 11.8, Diff: 11.8, Sum: 25.5]<br>      [Update RS (ms): Min: 0.0, Avg: 2.6, Max: 4.7, Diff: 4.7, Sum: 20.5]<br>         [Processed Buffers: Min: 0, Avg: 2.1, Max: 4, Diff: 4, Sum: 17]<br>      [Scan RS (ms): Min: 0.2, Avg: 0.5, Max: 0.8, Diff: 0.6, Sum: 4.0]<br>      [Code Root Scanning (ms): Min: 0.1, Avg: 17.5, Max: 46.5, Diff: 46.4, Sum: 140.3]<br>      [Object Copy (ms): Min: 18.2, Avg: 45.7, Max: 61.1, Diff: 42.9, Sum: 365.5]<br>      [Termination (ms): Min: 0.0, Avg: 0.2, Max: 0.3, Diff: 0.3, Sum: 1.6]<br>         [Termination Attempts: Min: 1, Avg: 264.2, Max: 370, Diff: 369, Sum: 2114]<br>      [GC Worker Other (ms): Min: 0.0, Avg: 0.1, Max: 0.2, Diff: 0.1, Sum: 0.7]<br>      [GC Worker Total (ms): Min: 62.9, Avg: 69.8, Max: 72.7, Diff: 9.8, Sum: 558.2]<br>      [GC Worker End (ms): Min: 12135.7, Avg: 12135.7, Max: 12135.8, Diff: 0.1]<br>   [Code Root Fixup: 0.7 ms]<br>   [Code Root Purge: 0.2 ms]<br>   [Clear CT: 0.9 ms]<br>   [Other: 16.9 ms]<br>      [Choose CSet: 0.0 ms]<br>      [Ref Proc: 11.7 ms]<br>      [Ref Enq: 0.3 ms]<br>      [Redirty Cards: 0.3 ms]<br>      [Humongous Register: 0.2 ms]<br>      [Humongous Reclaim: 0.2 ms]<br>      [Free CSet: 3.1 ms]<br>   [Eden: 3072.0M(3072.0M)-&gt;0.0B(3022.0M) Survivors: 0.0B-&gt;50.0M Heap: 3076.0M(4096.0M)-&gt;52.5M(4096.0M)]</p>
+<blockquote>
+<p>尝试将该信息报错报错到xxx.gc文件，上传到 <a target="_blank" rel="noopener" href="https://gceasy.ycrash.cn/">https://gceasy.ycrash.cn/</a> 平台，查看分析结果。</p>
+</blockquote>
+<hr>
+<p>我们逐行解释GC信息：</p>
+<p><strong>第一行：</strong>OpenJDK 64-Bit Server VM (25.181-b13) for linux-amd64 JRE (1.8.0_181-b13), built on Jul 16 2018 11:13:18 by “mockbuild” with gcc 4.8.5 20150623 (Red Hat 4.8.5-36)</p>
+<blockquote>
+<p> 叙述JDK的版本信息。</p>
+</blockquote>
+<p><strong>第二行：</strong>Memory: 4k page, physical 32937476k(25309772k free), swap 6291452k(6291452k free)</p>
+<blockquote>
+<p> Memory: 4k page，不知道啥意思；后面两个描述物理内存及交换区的大小。</p>
+</blockquote>
+<p><strong>第三行：</strong>CommandLine flags: -XX:CompressedClassSpaceSize&#x3D;528482304 -XX:ErrorFile&#x3D;&#x2F;home&#x2F;junode&#x2F;code&#x2F;dddcenter&#x2F;logs&#x2F;jvm&#x2F;&#x2F;hs_err_pid%p.log -XX:GCLogFileSize&#x3D;52428800 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath&#x3D;&#x2F;home&#x2F;junode&#x2F;code&#x2F;dddcenter&#x2F;logs&#x2F;jvm&#x2F; -XX:InitialHeapSize&#x3D;4294967296 -XX:MaxGCPauseMillis&#x3D;100 -XX:MaxHeapSize&#x3D;4294967296 -XX:MaxMetaspaceSize&#x3D;536870912 -XX:MaxNewSize&#x3D;3221225472 -XX:MetaspaceSize&#x3D;536870912 -XX:NewSize&#x3D;3221225472 -XX:NumberOfGCLogFiles&#x3D;10 -XX:+ParallelRefProcEnabled -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:SurvivorRatio&#x3D;8 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseG1GC </p>
+<blockquote>
+<p>概述当前程序运行时采用的JVM参数，若没有设置的参数值，应该会给默认值。</p>
+</blockquote>
+<p><strong>第四行：</strong>2022-03-10T11:57:40.423+0800: 12.062: [GC pause (G1 Evacuation Pause) (young), 0.0914849 secs]</p>
+<blockquote>
+<p>GC发生的系统时间，GC发生在程序启动后的多少秒后产生的GC。其中12.062s指的是过了12多秒后发生了GC，此次GC耗时0.0914849 secs；GC发生的原因是<code>GC pause (G1 Evacuation Pause)</code>，发生的是·young gc·。</p>
+</blockquote>
+<p>对于 <code>GC pause (G1 Evacuation Pause)(young)</code>的理解，我们先来看下G1的垃圾回收过程：</p>
+<ol>
+<li><p>在逻辑上，G1分为年轻代和老年代，但他的年轻代和老年代比例，并不是那么“固定”，为了达到MaxGCPauseMills所规定的效果，G1会自动调整两者之间的比例。</p>
+</li>
+<li><p>如果你强行使用-Xmn或者-XX:NewRatio去设定他们的比例的话，我们给G1设定这个目标将会失效。</p>
+</li>
+<li><p>G1的回收过程主要分为三类：</p>
+<ol>
+<li><strong>G1“年轻代”的垃圾回收</strong>，同样叫Minor GC，这个过程和我们前面描述的类似，发生时机就是<strong>Eden区满的时候；</strong></li>
+<li>老年代的垃圾收集，严格上来说其实不算是收集，他是一个“并发标记”的过程，顺便清理了一点对象。</li>
+<li>真正的清理，发生在“混合模式”，它不止清理年轻代，还会将老年代的一部分区域进行清理。</li>
+</ol>
+<p><img src="/G1%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90.assets/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2xzczQ0NjkzNzA3Mg==,size_16,color_FFFFFF,t_70.jpeg" alt="img"></p>
+<p>在GC日志里，**（1）的过程，叫做[GC pause (G1 Evacuation Pause) (young)]**，而（2）的过程叫做[GC pause (G1 Evacuation Pause) (mix)]。Evacuation是转移的意思，和Copy的意思有点类似。</p>
+<blockquote>
+<p><code>GC pause (G1 Evacuation Pause)(young)</code>：指G1的Eden区满的时候，发生的年轻代垃圾回收的过程</p>
+</blockquote>
+</li>
+</ol>
+<p>中间部分说明：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#整个GC细节过程的耗时情况</span></span><br><span class="line">[Parallel Time: 72.8 ms, GC Workers: 8]		<span class="comment"># 开启了8个GC线程</span></span><br><span class="line">   [GC Worker Start (ms): Min: 12063.1, Avg: 12066.0, Max: 12072.9, Diff: 9.8]  <span class="comment"># 工作线程启动时间</span></span><br><span class="line">   [Ext Root Scanning (ms): Min: 0.0, Avg: 3.2, Max: 11.8, Diff: 11.8, Sum: 25.5] <span class="comment"># 扫描root时间</span></span><br><span class="line">   [Update RS (ms): Min: 0.0, Avg: 2.6, Max: 4.7, Diff: 4.7, Sum: 20.5] <span class="comment"># 更新RS的耗时</span></span><br><span class="line">      [Processed Buffers: Min: 0, Avg: 2.1, Max: 4, Diff: 4, Sum: 17]</span><br><span class="line">   [Scan RS (ms): Min: 0.2, Avg: 0.5, Max: 0.8, Diff: 0.6, Sum: 4.0] <span class="comment"># 扫描RS耗时</span></span><br><span class="line">   [Code Root Scanning (ms): Min: 0.1, Avg: 17.5, Max: 46.5, Diff: 46.4, Sum: 140.3]</span><br><span class="line">   [Object Copy (ms): Min: 18.2, Avg: 45.7, Max: 61.1, Diff: 42.9, Sum: 365.5] <span class="comment"># 对象拷贝耗时</span></span><br><span class="line">   [Termination (ms): Min: 0.0, Avg: 0.2, Max: 0.3, Diff: 0.3, Sum: 1.6]</span><br><span class="line">      [Termination Attempts: Min: 1, Avg: 264.2, Max: 370, Diff: 369, Sum: 2114]</span><br><span class="line">   [GC Worker Other (ms): Min: 0.0, Avg: 0.1, Max: 0.2, Diff: 0.1, Sum: 0.7]</span><br><span class="line">   [GC Worker Total (ms): Min: 62.9, Avg: 69.8, Max: 72.7, Diff: 9.8, Sum: 558.2]</span><br><span class="line">   [GC Worker End (ms): Min: 12135.7, Avg: 12135.7, Max: 12135.8, Diff: 0.1]</span><br><span class="line">[Code Root Fixup: 0.7 ms]</span><br><span class="line">[Code Root Purge: 0.2 ms]</span><br><span class="line">[Clear CT: 0.9 ms]</span><br><span class="line">[Other: 16.9 ms]		<span class="comment"># 其他任务耗时</span></span><br><span class="line">   [Choose CSet: 0.0 ms]  <span class="comment"># CSet选择Region的时间</span></span><br><span class="line">   [Ref Proc: 11.7 ms]   <span class="comment"># 处理对象引用的时间</span></span><br><span class="line">   [Ref Enq: 0.3 ms]		<span class="comment"># 引用入ReferenceQueues队列的时间</span></span><br><span class="line">   [Redirty Cards: 0.3 ms]</span><br><span class="line">   [Humongous Register: 0.2 ms]</span><br><span class="line">   [Humongous Reclaim: 0.2 ms]</span><br><span class="line">   [Free CSet: 3.1 ms] <span class="comment"># 释放CSet时间</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>最后一行：</strong>   [Eden: 3072.0M(3072.0M)-&gt;0.0B(3022.0M) Survivors: 0.0B-&gt;50.0M Heap: 3076.0M(4096.0M)-&gt;52.5M(4096.0M)]。</p>
+<blockquote>
+<p>   Eden 回收前用量（总容量)-&gt;回收后用量(总容量),Survivors区回收前用量-回收后用量， 堆内存回收前用量（总容量）-&gt;回收后用量（总容量）</p>
+</blockquote>
+<h4 id="文章参考："><a href="#文章参考：" class="headerlink" title="文章参考："></a>文章参考：</h4><ol>
+<li>（七）详解G1GC：<a target="_blank" rel="noopener" href="https://blog.csdn.net/lss446937072/article/details/109954785">https://blog.csdn.net/lss446937072/article/details/109954785</a></li>
+<li>JVM实战：GC日志解析：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/267388951">https://zhuanlan.zhihu.com/p/267388951</a></li>
+</ol>
 
     
 
@@ -514,7 +342,7 @@
         </li>
         <li>
           <strong>本文链接：</strong>
-          <a href="http://example.com/2022/03/17/MySQL技术内幕第二章笔记/" title="Mysql技术内幕第二章-InnoDB概述" target="_blank">http://example.com/2022/03/17/MySQL技术内幕第二章笔记/</a>
+          <a href="http://example.com/2022/03/13/G1垃圾回收器日志分析/" title="G1垃圾回收器日志分析" target="_blank">http://example.com/2022/03/13/G1垃圾回收器日志分析/</a>
         </li>
         
         <li>
@@ -536,7 +364,15 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">MySQL</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">JVM</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">GC日志</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">gceasy</a>
         		</li>
       		
 		</ul>
@@ -592,7 +428,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-     <!-- <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/03/17/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%BA%8C%E7%AB%A0%E7%AC%94%E8%AE%B0/" alt="微信分享二维码"> -->
+     <!-- <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/03/13/G1%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/" alt="微信分享二维码"> -->
     </div>
 </div>
 
@@ -607,9 +443,18 @@
 
 <nav id="article-nav">
   
+    <a href="/2022/03/13/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%B8%80%E7%AB%A0%E7%AC%94%E8%AE%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Mysql技术内幕第一章-Mysql体系结构和存储引擎
+        
+      </div>
+    </a>
   
-    <a href="/2022/03/16/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%AC%AC%E4%B8%80%E7%AB%A0/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">深入理解Java虚拟机第一章-概述</div>
+  
+    <a href="/2022/03/13/MySQL%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95%E7%AC%AC%E4%B8%89%E7%AB%A0%E7%AC%94%E8%AE%B0/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Mysql技术内幕第三章-文件</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -636,7 +481,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-InnoDB%E5%AD%98%E5%82%A8%E5%BC%8F%E5%BC%95%E6%93%8E%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">2.1 InnoDB存储式引擎概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-InnoDB%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E7%9A%84%E7%89%88%E6%9C%AC"><span class="toc-number">2.</span> <span class="toc-text">2.2 InnoDB存储引擎的版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-InnoDB%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">2.3 InnoDB体系架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-1-%E5%90%8E%E5%8F%B0%E7%BA%BF%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text">2.3.1 后台线程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-2-%E5%86%85%E5%AD%98"><span class="toc-number">3.2.</span> <span class="toc-text">2.3.2 内存</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1%E3%80%81%E7%BC%93%E5%86%B2%E6%B1%A0"><span class="toc-number">3.2.1.</span> <span class="toc-text">1、缓冲池</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2%E3%80%81LRU-List%E3%80%81Free-List-%E5%92%8C-Flush-List"><span class="toc-number">3.2.2.</span> <span class="toc-text">2、LRU List、Free List 和 Flush List</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%87%8D%E5%81%9A%E6%97%A5%E5%BF%97%E7%BC%93%E5%86%B2"><span class="toc-number">3.2.3.</span> <span class="toc-text">重做日志缓冲</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A2%9D%E5%A4%96%E7%9A%84%E5%86%85%E5%AD%98%E6%B1%A0"><span class="toc-number">3.2.4.</span> <span class="toc-text">额外的内存池</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-CheckPoint%E6%8A%80%E6%9C%AF"><span class="toc-number">4.</span> <span class="toc-text">2.4 CheckPoint技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-Master-Thread%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">2.5 Master Thread工作方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-1-InnoDB-1-0-x%E7%89%88%E6%9C%AC%E4%B9%8B%E5%89%8D%E7%9A%84Master-Thread"><span class="toc-number">5.1.</span> <span class="toc-text">2.5.1 InnoDB 1.0.x版本之前的Master Thread</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-2-InnoDB-1-2-x%E7%89%88%E6%9C%AC%E4%B9%8B%E5%89%8D%E7%9A%84Master-Thread"><span class="toc-number">5.2.</span> <span class="toc-text">2.5.2 InnoDB 1.2.x版本之前的Master Thread</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-3-InnoDB-1-2-x%E7%89%88%E6%9C%AC%E7%9A%84Master-Thread"><span class="toc-number">5.3.</span> <span class="toc-text">2.5.3 InnoDB 1.2.x版本的Master Thread</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-InnoDB%E5%85%B3%E9%94%AE%E7%89%B9%E6%80%A7"><span class="toc-number">6.</span> <span class="toc-text">2.6 InnoDB关键特性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6-1-%E6%8F%92%E5%85%A5%E7%BC%93%E5%86%B2"><span class="toc-number">6.1.</span> <span class="toc-text">2.6.1 插入缓冲</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-6-1-1-insert-buffer"><span class="toc-number">6.1.1.</span> <span class="toc-text">2.6.1.1 insert buffer</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-6-1-3-insert-buffer%E7%9A%84%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0"><span class="toc-number">6.1.2.</span> <span class="toc-text">2.6.1.3 insert buffer的内部实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-6-1-4-merge-insert-buffer"><span class="toc-number">6.1.3.</span> <span class="toc-text">2.6.1.4 merge insert buffer</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6-2-%E4%B8%A4%E6%AC%A1%E5%86%99"><span class="toc-number">6.2.</span> <span class="toc-text">2.6.2 两次写</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6-3-%E8%87%AA%E9%80%82%E5%BA%94%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95"><span class="toc-number">6.3.</span> <span class="toc-text">2.6.3 自适应哈希索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6-4-%E5%BC%82%E6%AD%A5IO"><span class="toc-number">6.4.</span> <span class="toc-text">2.6.4 异步IO</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6-5-%E5%88%B7%E6%96%B0%E9%82%BB%E6%8E%A5%E9%A1%B5"><span class="toc-number">6.5.</span> <span class="toc-text">2.6.5 刷新邻接页</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-7-%E5%90%AF%E5%8A%A8%E3%80%81%E5%85%B3%E9%97%AD%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="toc-number">7.</span> <span class="toc-text">2.7 启动、关闭与恢复</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E5%8F%82%E8%80%83%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">文章参考：</span></a></li></ol>
                     </div>
                 </span>
             </div>
